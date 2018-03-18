@@ -10,6 +10,7 @@ module.exports = function(router) {
     console.log('in post route req', req.body);
     let pw = req.body.password;
     delete req.body.password;
+    req.body.username = req.body.email;
 
     let user = new Auth(req.body);
 

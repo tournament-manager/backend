@@ -6,7 +6,7 @@ const crypto = require('crypto');
 const mongoose = require('mongoose');
 
 const User = mongoose.Schema({
-  
+  'username':{type: String},
   'email': {type: String, required: true, unique: true},
   'contact': {type: String},
   'password': {type: String, required: true},
