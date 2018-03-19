@@ -3,8 +3,8 @@ const mongoose = require('mongoose');
 const Tournament = mongoose.Schema({
   'name': {type: String, required: true},
   'director': {type: mongoose.Schema.Types.ObjectId, ref: 'user'},
-  'dateStart': {type: Date, required: true},
-  'dateEnd': {type: Date, required: true},
+  'dateStart': {type: Date},
+  'dateEnd': {type: Date},
   
 }, {timestamps: true});
 
