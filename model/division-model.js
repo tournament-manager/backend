@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const Division = mongoose.Schema({
   'name': {type: String, required: true},
   'tournament': {type: mongoose.Schema.Types.ObjectId, ref: 'tournament'},
-  'ageGroup': {type: Number, required: true},
+  'ageGroup': {type: String, required: true},
   'classification': {type: String, required: true},
   'fields': [{type: mongoose.Schema.Types.ObjectId, ref: 'field'}],
   'groupA': [{type: mongoose.Schema.Types.ObjectId, ref: 'game'}],
@@ -14,6 +14,5 @@ const Division = mongoose.Schema({
   'semiFinal': [{type: mongoose.Schema.Types.ObjectId, ref: 'game'}],
   'final': [{type: mongoose.Schema.Types.ObjectId, ref: 'game'}],
 }, {timestamps: true});
-
 
 module.exports = mongoose.model('division', Division);
