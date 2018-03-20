@@ -7,6 +7,24 @@ require('jest');
 var divisionNumber;
 var newUser = mock.new_user();
 var newDivision = mock.new_division('U10', 'boys');
+const teams = [
+  '5aaedafa6d4f732e2756a9c7',
+  '5aaee2b26938803307b06e5e',
+  '5aaf2b72f5326c4d62d63d90',
+  '5aaf2b82f5326c4d62d63d91',
+  '5aaf2b8df5326c4d62d63d92',
+  '5aaf2b98f5326c4d62d63d93',
+  '5aaf2ba4f5326c4d62d63d94',
+  '5aaf2baef5326c4d62d63d95',
+  '5aaf2bb8f5326c4d62d63d96',
+  '5aaf2bc3f5326c4d62d63d97',
+  '5aaf2bd1f5326c4d62d63d98',
+  '5aaf2bdcf5326c4d62d63d99',
+  '5aaf2be7f5326c4d62d63d9a',
+  '5aaf2bf2f5326c4d62d63d9b',
+  '5aaf2bfef5326c4d62d63d9c',
+  '5aaf2c09f5326c4d62d63d9d',
+];
 
 var token;
 
@@ -52,7 +70,6 @@ describe('simple mock test', () => {
       .set('Authorization', `Bearer ${token}`)
       .then((response) => {
         expect(response.status).toBe(200);
-        console.log(response.body);
         expect(response.body).not.toBe(null);
         
       });  
@@ -79,16 +96,6 @@ describe('simple mock test', () => {
         
       });  
   });
-  it('should return a 204 code when a division is deleted', () => {
-    
-    return superagent.delete(`:${process.env.PORT}/api/v1/division/${divisionNumber}`)
-      .set('Authorization', `Bearer ${token}`)
-      .then((response) => {
-        expect(response.status).toBe(204);
-      
-        
-      });  
-  });
   
   it('should return a 404 code when a division is not found', () => {
     
@@ -101,7 +108,26 @@ describe('simple mock test', () => {
       });  
   });
 
-
+  it('Should return a list of games ', () => {
+    
+    return superagent.post(`:${process.env.PORT}/api/v1/division/populate/${divisionNumber}`)
+      .set('Authorization', `Bearer ${token}`)
+      .send(teams)
+      .then((response) => {
+        expect(response.status).toBe(204);
+           
+      });  
+  });
+  it('should return a 204 code when a division is deleted', () => {
+    
+    return superagent.delete(`:${process.env.PORT}/api/v1/division/${divisionNumber}`)
+      .set('Authorization', `Bearer ${token}`)
+      .then((response) => {
+        expect(response.status).toBe(204);
+      
+        
+      });  
+  });
   
 
 
