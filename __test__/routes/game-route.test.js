@@ -13,7 +13,6 @@ beforeAll(() => server.start());
 beforeAll(() => {
   return mock.game.create()
     .then(gameData => {
-      console.log('gameData', gameData);
       return this.gameData = gameData;
     })
     .catch(err => console.error(err));

@@ -14,9 +14,6 @@ module.exports = function (router){
 
   router.route('/division/create')
     .post(bearerAuthMiddleware,bodyParser,(request,response) => {
-      console.log('in division create');
-     
-      console.log(request.body.name);
       return new Division(request.body).save()
         .then(createdDivision => response.status(201).json(createdDivision))
         .catch(error => errorHandler(error,response));
@@ -26,7 +23,6 @@ module.exports = function (router){
       
     .get(bearerAuthMiddleware,(request,response) => {
       //  returns one team
-      console.log('in get route division');
       if(request.params._id){
         return Division.findById(request.params._id)
           .then(division => response.status(200).json(division))
@@ -47,7 +43,6 @@ module.exports = function (router){
     .put(bearerAuthMiddleware,bodyParser,(request,response) => {
       Division.findById(request.params._id)
         .then(division => {
-          console.log(division);
           if(division._id.toString() === request.params._id.toString()){
             division.name = request.body.name || division.name;
             division.tournament = request.body.tournament || division.tournament;

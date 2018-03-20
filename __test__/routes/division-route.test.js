@@ -52,7 +52,7 @@ describe('simple mock test', () => {
       .set('Authorization', `Bearer ${token}`)
       .then((response) => {
         expect(response.status).toBe(200);
-        console.log(response.body);
+        
         expect(response.body).not.toBe(null);
         
       });  
@@ -100,9 +100,5 @@ describe('simple mock test', () => {
         
       });  
   });
-
-
-  
-
 
 });
