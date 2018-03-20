@@ -13,10 +13,6 @@ module.exports = function (router){
   
   router.route('/tournament/create')
     .post(bearerAuthMiddleware,bodyParser,(request,response) => {
-     
-      console.log(request.user);
-      
-
       request.director = request.user._id;
 
       return new Tournament(request.body).save()
@@ -38,7 +34,6 @@ module.exports = function (router){
     .put(bearerAuthMiddleware,bodyParser,(request,response) => {
       Tournament.findById(request.params._id)
         .then(tournament => {
-          console.log(tournament);
           if(tournament._id.toString() === request.params._id.toString()){
             tournament.name = request.body.name || tournament.name;
             tournament.director = request.body.director || tournament.director;
@@ -54,12 +49,10 @@ module.exports = function (router){
     })
     .get(bearerAuthMiddleware,(request,response) => {
       //  returns one team
-      console.log('in get route');
       if(request.params._id){
         return Tournament.findById(request.params._id)
           .then(tournament => response.status(200).json(tournament))
           .catch(error => {
-            console.log('error in t find__________', error);
             errorHandler(error,response);
           });
       }

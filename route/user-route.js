@@ -7,7 +7,6 @@ const basicAuth = require('../lib/basic-auth');
 
 module.exports = function(router) {
   router.post('/signup', bodyParser, (req, res) => {
-    console.log('in post route req', req.body);
     let pw = req.body.password;
     delete req.body.password;
     req.body.username = req.body.email;

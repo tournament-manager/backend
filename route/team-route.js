@@ -14,7 +14,6 @@ module.exports = function (router){
       
     .get(bearerAuthMiddleware,(request,response) => {
       //  returns one team
-      console.log('in get route');
       if(request.params._id){
         return Team.findById(request.params._id)
           .then(team => response.status(200).json(team))
@@ -35,7 +34,6 @@ module.exports = function (router){
     .put(bearerAuthMiddleware,bodyParser,(request,response) => {
       Team.findById(request.params._id)
         .then(team => {
-          console.log(team);
           if(team._id.toString() === request.params._id.toString()){
             team.name = request.body.name || team.name;
             team.coach = request.body.coach || team.coach;

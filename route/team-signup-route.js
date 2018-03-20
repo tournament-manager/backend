@@ -12,10 +12,6 @@ module.exports = function (router){
   
   router.route('/team/signup')
     .post(bearerAuthMiddleware,bodyParser,(request,response) => {
-     
-      console.log(request.user);
-      
-
       request.coach = request.user._id;
 
       return new Team(request.body).save()

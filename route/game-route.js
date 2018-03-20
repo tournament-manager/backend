@@ -15,7 +15,6 @@ module.exports = function (router){
       
     .get(bearerAuthMiddleware,(request,response) => {
       //  returns one team
-      console.log('in get route division');
       if(request.params._id){
         return Game.findById(request.params._id)
           .then(game => response.status(200).json(game))

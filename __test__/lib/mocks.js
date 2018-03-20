@@ -78,7 +78,6 @@ mock.game.create = () => {
     
   return newGame.save()
     .then(game => {
-      console.log(game);
       return game;
     })
     .catch(console.error);
