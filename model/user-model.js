@@ -6,9 +6,10 @@ const crypto = require('crypto');
 const mongoose = require('mongoose');
 
 const User = mongoose.Schema({
-  
+  'username':{type: String},
   'email': {type: String, required: true, unique: true},
   'contact': {type: String},
+  'fullname': {type: String, required: true},
   'password': {type: String, required: true},
   'tokenSeed': {type: String, unique: true},
   'notification': {type: Boolean, required: true},
