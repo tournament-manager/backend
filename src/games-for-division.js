@@ -29,7 +29,7 @@ module.exports = function(teams, divisionId) {
     }
     Game.create(holdingArray)
       .then(savedGameArray => {
-        // console.log('savedGameArray', savedGameArray);
+       
         returnArray.push(savedGameArray.slice(0,6));
         returnArray.push(savedGameArray.slice(6,12));
         returnArray.push(savedGameArray.slice(12,18));
@@ -37,7 +37,7 @@ module.exports = function(teams, divisionId) {
         returnArray.push(savedGameArray.slice(24,28));
         returnArray.push(savedGameArray.slice(28,30));
         returnArray.push(savedGameArray.slice(30));
-        // console.log('return array', returnArray);
+       
         return resolve(returnArray);
       })
       .catch(err => {

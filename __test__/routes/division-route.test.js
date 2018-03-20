@@ -108,7 +108,7 @@ describe('simple mock test', () => {
       });  
   });
 
-  it('Should return a list of games ', () => {
+  it('Should return a list of games when populate route is targeted ', () => {
     
     return superagent.post(`:${process.env.PORT}/api/v1/division/populate/${divisionNumber}`)
       .set('Authorization', `Bearer ${token}`)
@@ -118,6 +118,7 @@ describe('simple mock test', () => {
            
       });  
   });
+  
   it('should return a 204 code when a division is deleted', () => {
     
     return superagent.delete(`:${process.env.PORT}/api/v1/division/${divisionNumber}`)

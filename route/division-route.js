@@ -15,9 +15,7 @@ module.exports = function (router){
 
   router.route('/division/create')
     .post(bearerAuthMiddleware,bodyParser,(request,response) => {
-      // console.log('in division create');
-     
-      // console.log(request.body.name);
+      
       return new Division(request.body).save()
         .then(createdDivision => response.status(201).json(createdDivision))
         .catch(error => errorHandler(error,response));
@@ -25,8 +23,7 @@ module.exports = function (router){
 
   router.route('/division/populate/:_id')
     .post(bearerAuthMiddleware,bodyParser,(request,response) => {
-      // console.log('in division populate');
-      // console.log('body of request with teams', request.body);
+      
       gamesPopulate(request.body, request.params._id)
         .then(returnArray => {
           // console.log('return from fn', returnArray);
