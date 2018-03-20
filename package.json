@@ -15,6 +15,23 @@
     "start-db": "mkdir -p ./data/db && mongod --dbpath ./data/db",
     "stop-db": "killall mongod"
   },
+  "jest": {
+    "setupFiles": [
+      "./__test__/lib/jest-setup.js"
+    ],
+    "verbose": true,
+    "testEnvironment": "node",
+    "collectCoverage": true,
+    "coverageDirectory": "./coverage",
+    "coverageThreshold": {
+      "global": {
+        "branches": 10,
+        "functions": 10,
+        "lines": 10,
+        "statements": 10
+      }
+    }
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/tournament-manager/backend.git"
@@ -31,12 +48,15 @@
     "body-parser": "^1.18.2",
     "cors": "^2.8.4",
     "crypto": "^1.0.1",
+    "debug": "^3.1.0",
     "dotenv": "^5.0.1",
     "express": "^4.16.3",
     "jsonwebtoken": "^8.2.0",
-    "mongoose": "^5.0.10"
+    "mongoose": "^5.0.10",
+    "superagent": "^3.8.2"
   },
   "devDependencies": {
+    "faker": "^4.1.0",
     "jest": "^22.4.2"
   }
 }

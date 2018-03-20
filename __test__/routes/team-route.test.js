@@ -4,10 +4,10 @@ const mock = require('../lib/mocks');
 const server = require('../../lib/server');
 const superagent = require('superagent');
 require('jest');
-var divisionNumber;
-var newUser = mock.new_user();
-var newDivision = mock.new_division('U10', 'boys');
 
+var newUser = mock.new_user();
+var newTeam = mock.new_team('2008', 'boys');
+var teamNumber;
 var token;
 
 beforeAll(() => server.start());
@@ -28,17 +28,17 @@ describe('simple mock test', () => {
   
   it('should return a 201 code if created', () => {
     
-    return superagent.post(`:${process.env.PORT}/api/v1/division/create`)
+    return superagent.post(`:${process.env.PORT}/api/v1/team/signup`)
       .set('Authorization', `Bearer ${token}`)
-      .send(newDivision)
+      .send(newTeam)
       .then((response) => {
         expect(response.status).toBe(201);
-        divisionNumber = response.body._id;        
+        teamNumber = response.body._id;        
       });  
   });
-  it('should return a division when division number supplied', () => {
+  it('should return a team when team number supplied', () => {
     
-    return superagent.get(`:${process.env.PORT}/api/v1/division/${divisionNumber}`)
+    return superagent.get(`:${process.env.PORT}/api/v1/teams/${teamNumber}`)
       .set('Authorization', `Bearer ${token}`)
       .then((response) => {
         expect(response.status).toBe(200);
@@ -46,63 +46,55 @@ describe('simple mock test', () => {
         
       });  
   });
-  it('should return all divisions when division number is not supplied', () => {
+  it('should return all teams when no team number is supplied', () => {
     
-    return superagent.get(`:${process.env.PORT}/api/v1/division`)
+    return superagent.get(`:${process.env.PORT}/api/v1/teams`)
       .set('Authorization', `Bearer ${token}`)
       .then((response) => {
         expect(response.status).toBe(200);
-        console.log(response.body);
         expect(response.body).not.toBe(null);
         
       });  
   });
-  it('should return a 204 code if a division is updated', () => {
+  it('should return a 204 code if a team is updated', () => {
     
-    return superagent.put(`:${process.env.PORT}/api/v1/division/${divisionNumber}`)
+    return superagent.put(`:${process.env.PORT}/api/v1/teams/${teamNumber}`)
       .set('Authorization', `Bearer ${token}`)
-      .send({name: 'new name for test'})
+      .send({classification: 'not boys or girls'})
       .then((response) => {
         expect(response.status).toBe(204);
       
         
       });  
   });
-  it('should return a 404 code if a division update is not successfull', () => {
+  it('should return a 404 code if a team is updated without a team id', () => {
     
-    return superagent.put(`:${process.env.PORT}/api/v1/division/999999`)
+    return superagent.put(`:${process.env.PORT}/api/v1/teams/8888888`)
       .set('Authorization', `Bearer ${token}`)
-      .send({name: 'new name for test'})
+      .send({classification: 'not boys or girls'})
       .catch((response) => {
         expect(response.status).toBe(404);
       
         
       });  
   });
-  it('should return a 204 code when a division is deleted', () => {
+  it('should return a 204 code when a team is deleted', () => {
     
-    return superagent.delete(`:${process.env.PORT}/api/v1/division/${divisionNumber}`)
+    return superagent.delete(`:${process.env.PORT}/api/v1/teams/${teamNumber}`)
       .set('Authorization', `Bearer ${token}`)
       .then((response) => {
         expect(response.status).toBe(204);
-      
-        
+
       });  
   });
-  
-  it('should return a 404 code when a division is not found', () => {
+  it('should return a 404 code on delete route when incorrect team id ', () => {
     
-    return superagent.delete(`:${process.env.PORT}/api/v1/division/777777`)
+    return superagent.delete(`:${process.env.PORT}/api/v1/teams/77777777`)
       .set('Authorization', `Bearer ${token}`)
       .catch((response) => {
         expect(response.status).toBe(404);
-      
-        
+
       });  
   });
-
-
-  
-
 
 });

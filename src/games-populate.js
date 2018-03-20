@@ -5,12 +5,18 @@ const Game = require('../model/game-model');
 
 const Division = require('../model/division-model');
 const div = '5aaf248169009747716ed73d';
+
 const gamesArray = [
-  [1,2],[3,4],[5,6],[7,8],[9,10],[11,12],[13,14],
-  [15,16],[1,3],[2,4],[5,7],[6,8],[9,11],[10,12],
-  [13,15],[14,16],[4,1],[2,3],[8,5],[7,6],[12,9],
-  [10,11],[16,13],[15,14],
+  [1,2],[5,6], [9,10], [13,14],
+  [3,4],[7,8], [11,12], [15,16],
+  [1,3], [5,7], [9,11], [13,15],
+  [2,4], [6,8], [10,12], [14,16],
+  [4,1], [8,5], [12,9], [16,13],
+  [2,3], [7,6], [10,11], [15,14],
 ];
+
+
+
 const teams = [
   '5aaedafa6d4f732e2756a9c7',
   '5aaee2b26938803307b06e5e',
@@ -47,4 +53,6 @@ for (let i = 25; i < 32; i ++) {
   currentGame.division = div;
   testHoldingArray.push(currentGame);
 }
-console.log('testhoding', testHoldingArray);
+
+let returnArray = [];
+console.log('testholding', testHoldingArray);

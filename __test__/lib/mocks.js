@@ -4,12 +4,14 @@ const faker = require('faker');
 const User = require('../../model/user-model');
 const Tournament = require('../../model/tournament-model');
 const Division = require('../../model/division-model');
+const Game = require('../../model/game-model');
 const debug = require('debug')('http:mock');
 
 debug('mock data');
 
 const mock = module.exports = {};
 mock.user = {};
+mock.game = {};
 
 mock.new_user = () => ({
   fullname: `${faker.name.firstName()} ${faker.name.lastName()}`,
@@ -45,7 +47,7 @@ mock.endDate = (days) => {
   return new Date(today.setDate(today.getDate() + days));
 };
 
-mock.newTournamentData = () => ({
+mock.new_tournament = () => ({
   name: `${faker.hacker.ingverb()} ${faker.hacker.adjective()} ${faker.hacker.noun()}`,
   director: null,
   dateStart: new Date(),
@@ -60,6 +62,27 @@ mock.new_division = (ageGroup, classification) => (
     classification: classification,
   }
 );
+mock.new_team = (birthyear, classification) => (
+  {
+    name: `${faker.hacker.ingverb()} ${faker.hacker.adjective()} ${faker.hacker.noun()}`,
+    birthyear: birthyear,
+    classification: classification,
+  }
+);
+
+mock.game.create = () => {
+   
+  let newGame = new Game();
+  newGame.division = '5aaf248169009747716ed73d';
+  newGame.gamenumber = 1;
+    
+  return newGame.save()
+    .then(game => {
+      console.log(game);
+      return game;
+    })
+    .catch(console.error);
+};
 
 mock.removeUsers = () => Promise.all([User.remove()]); 
 mock.removeTournaments = () => Promise.all([Tournament.remove()]);

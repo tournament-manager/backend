@@ -3,10 +3,11 @@
 const mock = require('../lib/mocks');
 const server = require('../../lib/server');
 const superagent = require('superagent');
+const User = require('../../model/user-model');
 require('jest');
 
 var newUser = mock.new_user();
-console.log('new user', newUser);
+var testUser = new User();
 
 beforeAll(() => server.start());
 afterAll(() => server.stop());
@@ -52,6 +53,11 @@ describe('simple mock test', () => {
         expect(response.status).toBe(400);
       });
   });
-
+  it('should should fail if no password password to comparePasswordHash', () =>{
+    return testUser.comparePasswordHash()
+      .catch(response => {
+        expect(response.message).toMatch(/data and hash arguments required/);
+      });
+  });
 
 });

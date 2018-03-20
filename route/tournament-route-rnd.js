@@ -1,7 +1,7 @@
 'use strict';
 
 const Tournament = require('../model/tournament-model');
-const User = require('../model/user-model');
+
 const bodyParser = require('body-parser').json();
 const errorHandler = require('../lib/error-handler');
 const bearerAuthMiddleware = require('../lib/bearer-auth');
@@ -35,13 +35,33 @@ module.exports = function (router){
         .then(() => response.sendStatus(204))
         .catch(error => errorHandler(error,response));
     })
+    .put(bearerAuthMiddleware,bodyParser,(request,response) => {
+      Tournament.findById(request.params._id)
+        .then(tournament => {
+          console.log(tournament);
+          if(tournament._id.toString() === request.params._id.toString()){
+            tournament.name = request.body.name || tournament.name;
+            tournament.director = request.body.director || tournament.director;
+            tournament.startdate = request.body.startdate || tournament.startdate;
+            tournament.enddate = request.body.enddate || tournament.enddate;
+            return tournament.save();
+          }
+
+          return errorHandler(new Error(ERROR_MESSAGE),response);
+        })
+        .then(() => response.sendStatus(204))
+        .catch(error => errorHandler(error,response));
+    })
     .get(bearerAuthMiddleware,(request,response) => {
       //  returns one team
       console.log('in get route');
       if(request.params._id){
         return Tournament.findById(request.params._id)
           .then(tournament => response.status(200).json(tournament))
-          .catch(error => errorHandler(error,response));
+          .catch(error => {
+            console.log('error in t find__________', error);
+            errorHandler(error,response);
+          });
       }
 
       // returns all the team

@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 
-mongoose.connect('mongodb://localhost/tournament');
+mongoose.connect('mongodb://localhost/finaltest');
 const Game = require('../model/game-model');
 
 let testArray = [];
