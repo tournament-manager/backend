@@ -10,7 +10,7 @@ const ERROR_MESSAGE = 'Authorization Failed';
 
 
 module.exports = function (router){
-  
+
   router.route('/tournament/create')
     .post(bearerAuthMiddleware,bodyParser,(request,response) => {
       request.director = request.user._id;
@@ -25,7 +25,7 @@ module.exports = function (router){
         .then(tournament => {
           if(tournament._id.toString() === request.params._id.toString())
             return tournament.remove();
-          
+
           return errorHandler(new Error(ERROR_MESSAGE),response);
         })
         .then(() => response.sendStatus(204))
@@ -47,7 +47,7 @@ module.exports = function (router){
         .then(() => response.sendStatus(204))
         .catch(error => errorHandler(error,response));
     })
-    .get(bearerAuthMiddleware,(request,response) => {
+    .get((request,response) => {
       //  returns one team
       if(request.params._id){
         return Tournament.findById(request.params._id)
@@ -58,7 +58,7 @@ module.exports = function (router){
       }
 
       // returns all the team
-      
+
       return Tournament.find()
         .then(tournaments => {
           let tournamentIds = tournaments.map(tournament => tournament._id);
@@ -66,6 +66,6 @@ module.exports = function (router){
           response.status(200).json(tournamentIds);
         })
         .catch(error => errorHandler(error,response));
-      
+
     });
 };

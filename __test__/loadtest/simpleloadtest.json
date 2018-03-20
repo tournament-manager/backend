@@ -1,0 +1,41 @@
+{
+  "config": {
+    "environments": {
+      "production": {
+        "target": "https://tournament-back-end.herokuapp.com",
+        "phases": [
+          {
+            "duration": 1,
+            "arrivalRate": 1
+          }
+        ]
+      },
+      "development": {
+        "target": "http://localhost:3000",
+        "phases": [
+          {
+            "duration": 1,
+            "arrivalRate": 1
+          }
+         ]
+      }
+    }
+  },
+  "scenarios": [
+    {
+      "flow": [
+        {
+          "post": {
+            "url": "/api/v1/signup",
+            "json": {
+              "fullname": "karen perez",
+              "email": "karen@karen.com",
+              "password": "test",
+              "notification": true
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
