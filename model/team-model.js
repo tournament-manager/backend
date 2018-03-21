@@ -6,7 +6,7 @@ const Team = mongoose.Schema({
   'coach': {type: mongoose.Schema.Types.ObjectId, ref: 'user'},
   'birthyear': {type: String, required: true},
   'classification': {type: String, required: true},
-  'tournaments': [{type: mongoose.Schema.Types.ObjectId, ref: 'tournamet'}],
+  'tournaments': [{type: mongoose.Schema.Types.ObjectId, ref: 'tournament'}],
 }, {timestamps: true});
 
 
