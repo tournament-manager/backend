@@ -8,89 +8,97 @@ const gamesArray = [
   [9,10],[11,12],[9,11],[10,12],[12,9],[10,11],
   [13,14], [15,16], [13,15], [14,16], [16,13], [15,14],
 ];
+ 
 
 module.exports = function(divisionId) {
-  // return new Promise((resolve, reject) => {
-  let groupA, groupB, groupC, groupD, consolidation, semi, final;
-  let resultsArrayofObject = [{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}];
+  return new Promise((resolve, reject) => {
+    // let groupA, groupB, groupC, groupD, consolidation, semi, final;
+    let resultsArrayofObject = [];
+    for (let i = 0; i < 16 ; i ++) {
+      resultsArrayofObject.push({
+        played: 0,
+        won: 0,
+        lost: 0,
+        points: 0,
+        draw: 0,
+      });
+    }
+    
+   
   
 
 
-  Game.find({division:`${divisionId}`})
-    .then(result => {
-      // console.log('result of game find', result.length);
-      result.sort();
-      console.log('sorted result of find games by division')
-      result.array.forEach(game => {
-        let index = game.gamenumber - 1;
-        if(game.complete) {
-          resultsArrayofObject[gamesArray[index][0]].played ++;
-          resultsArrayofObject[gamesArray[index][1]].played ++;
-          if(game.resultA > game.resultB) {
-            resultsArrayofObject[gamesArray[index][0]].won ++ ;
-            resultsArrayofObject[gamesArray[index][1]].lost ++;
-            let pointsA, pointsB;
-            pointsA = 6;
-            pointsA = game.resultA  > 3 ? 3 : game.resultA;
-            if(game.resultB === 0) {
-              pointsA ++;
-            } else {
-              pointsB = game.resultsB > 3 ? 3 : game.resultB;
-            } 
-            resultsArrayofObject[gamesArray[index][0]].points = pointsA ;
-            resultsArrayofObject[gamesArray[index][1]].points = pointsB;
-          } else {
-            resultsArrayofObject[gamesArray[index][1]].won ++;
-            resultsArrayofObject[gamesArray[index][0]].lost ++;
-            let pointsA, pointsB;
-            pointsB = 6;
-            pointsB = game.resultB  > 3 ? 3 : game.resultB;
-            if(game.resultA === 0) {
-              pointsB ++;
-            } else {
-              pointsA = game.resultsA > 3 ? 3 : game.resultA;
-            } 
-            resultsArrayofObject[gamesArray[index][0]].points = pointsA ;
-            resultsArrayofObject[gamesArray[index][1]].points = pointsB;
+    Game.find({division:`${divisionId}`})
+      .then(result => {
+        result.sort();
+        console.log('sorted result of find games by division',result);
+        result.forEach(game => {
+          let index = game.gamenumber - 1;
+          if(game.complete) {
+            let teamA = gamesArray[index][0] - 1;
+            let teamB = gamesArray[index][1] - 1;
+            console.log('teams in this game', teamA, teamB);
+            console.log('game complete');
+            console.log('in complete', game.gamenumber);
+            console.log('targeted object in index',index ,resultsArrayofObject[gamesArray[index][0]] );
+            console.log('team A result', game.teamAResult);
+            console.log('team B result', game.teamBResult);
+            resultsArrayofObject[teamA].played ++;
+            resultsArrayofObject[teamB].played ++;
 
+            if(game.teamAResult > game.teamBResult) {
+              resultsArrayofObject[teamA].won ++ ;
+              resultsArrayofObject[teamB].lost ++;
+              let pointsA = 0;
+              let pointsB = 0;
+              pointsA = 6;
+              pointsA = game.teamAResult  > 3 ?  pointsA + 3 : pointsA + game.teamBResult;
+              if(game.teamBResult === 0) {
+                pointsA ++;
+              } else {
+                pointsB = game.teamBResult > 3 ? 3 : game.teamBResult;
+              } 
+              resultsArrayofObject[teamA].points = resultsArrayofObject[teamA].points + pointsA ;
+              resultsArrayofObject[teamB].points = resultsArrayofObject[teamB].points + pointsB;
+            } 
+            if (game.teamBResult > game.teamAResult) {
+              resultsArrayofObject[teamB].won ++;
+              resultsArrayofObject[teamA].lost ++;
+              let pointsA = 0;
+              let pointsB = 0;
+              pointsB = 6;
+              pointsB = game.teamBResult  > 3 ? pointsB + 3 : pointsB + game.teamBResult;
+              if(game.teamAResult === 0) {
+                pointsB ++;
+              } else {
+                pointsA = game.teamAResults > 3 ? 3 : game.teamAResults;
+              } 
+              
+         
+              resultsArrayofObject[teamB].points = resultsArrayofObject[teamB].points + pointsB;
+              resultsArrayofObject[teamA].points = resultsArrayofObject[teamA].points + pointsA ;
+
+            }
+            if (game.teamBResult === game.teamAResult) {
+              console.log('in draw')
+              resultsArrayofObject[teamB].draw ++;
+              resultsArrayofObject[teamA].draw ++;
+              let pointsA = 3;
+              let pointsB = 3;
+              pointsB = game.teamBResult  > 3 ? pointsB + 3 : pointsB + game.teamBResult;
+              pointsA = game.teamAResult > 3 ? pointsA + 3 : pointsA + game.teamAResult;
+              resultsArrayofObject[teamB].points = resultsArrayofObject[teamB].points + pointsB;
+              resultsArrayofObject[teamA].points = resultsArrayofObject[teamA].points + pointsA;
+
+            }
           }
-
-          
-        }
-      });
+        });
+        console.log('results array from logic',resultsArrayofObject );
+        return resolve(resultsArrayofObject);
+        
+      })
+      .catch(err => reject(err));
       
-      
-      
-      
-      
-      
-      // let groupAComplete = groupA.filter(game => {
-      //   return game.complete;
-      // });
-      // groupA = result.slice(0,6);
-      // console.log('result after sort',groupA);
-      // groupB = result.slice(6,12);
-      // groupC = result.slice(12,18);
-      // groupD = result.slice(18,24);
-      // let groupBComplete = groupB.filter(gamea => {
-      //   return gamea.complete;
-      // });
-      // let groupCComplete = groupC.filter(gameb => {
-      //   return gameb.complete;
-      // });
-      // let groupDComplete = groupD.filter(gamec => {
-      //   return gamec.complete;
-      // });
-      // console.log('teams: ', team1, team2, team3, team4);
-      
-      // console.log('lengths', groupAComplete.length, groupBComplete.length, groupCComplete.length, groupDComplete.length)
-      // consolidation = result.slice(24,28);
-      // semi = result.slice(28,30);
-      // final = result.slice(30);
-      // console.log('goup a after slice',final);
-    })
-    .catch(err => console.error(err));
-
 
     
 
@@ -106,5 +114,5 @@ module.exports = function(divisionId) {
 
 
 
+  });
 };
-
