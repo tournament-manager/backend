@@ -1,12 +1,36 @@
 ## TOURNAMENT BACK-END
 
+This tournament app is used to set up soccer tournaments. Each tournament is composed of a set of games, delineated by birth year and any other classification (gender, skill level), referred to here as divisions.  
 
+The set-up for each division of a tournament has 16 teams, each competing as 4 groups of 4, playing against each team in their group.
+- In this stage, points are awards to each game with the following rules: 6 points for a win, 1 point for a tie, 1 point for each goal scored up to 3, and 1 point for a clean-sheet (no goals allowed).  The maximum points in a game in group play is 10.  
+- From the groups, the two teams with the highest points move on to the play-offs.  The play-offs consist of single elimination games at the quarter-final, semi-final and final level.  
+Once complete, each division will have completed 31 games.
 
+## Application structure
+The back-end of the application used a non-relational MongoDB database for data persistence.  It runs on NodeJS and uses the Express routing and middleware framework.
 
+Testing is carried out using Jest.  Load testing was done using artillery.
+
+All the additional dependencies are listed in the package.json file.  
+
+The project uses Travis-CI for continuous integration and is deployed on Heroku at  https://tournament-back-end.herokuapp.com/.
+
+### Models
+Data is stored in this application using a non-relational database - MongoDB.  There are seven schemas.
+
+*User-model* is the sign-up/sign-in model for authorized users.  The only two type of authorized users are tournament admins - linked to tournaments - and referees, linked to games. Email, full name, password and notification (boolean) are required. This model contains the functions for generating and comparing passwords via hash and generating tokens.
+
+*Tournament-model* has only requires a name, and is linked to the user (admin).
+*Division-model* is the next level and requires a name, ageGroup and classification.  It is associated with the tournament and links to the games.
+*Game-model* requires a game number.  This model brings associates the teams, fields, referees and is linked to a division.
+
+*Ref-model* requires only a name and contact and is used to update game scores.
+*Field-model* requires a name, size and location.  Fields are assigned by the admin.
+*Team-model* require the information necessary to define a team - name, coach, birthyear, classification and their associated tournaments.  
 
 
 ### LOAD TESTING
-
 The load tests were conducted using Artillery from https://artillery.io/.   The load tests are contained in the __test__/loadtest folder.  Requests were made to the locally to test out code and to the Heroku backend (https://tournament-back-end.herokuapp.com/) to test the deployment.  
 - Post requests were made to sign up users (user-model), receive a token and use the token to create a tournament (tournament-model) using the loadtest.json file.
 - Get requests were made to view tournaments were made using the getloadtest.json.
