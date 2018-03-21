@@ -1,0 +1,69 @@
+{
+  "config": {
+    "processor": "./artillery-payload.js",
+    "environments": {
+      "production": {
+        "target": "https://tournament-back-end.herokuapp.com",
+        "phases": [
+          {
+            "duration": 2,
+            "arrivalRate": 5
+          },
+          {
+            "duration": 10,
+            "arrivalRate": 50
+          }
+        ]
+      },
+      "development": {
+        "target": "http://localhost:3000",
+        "phases": [
+          {
+            "duration": 2,
+            "arrivalRate": 10
+          },
+          {
+            "duration": 10,
+            "arrivalRate": 500
+          }
+         ]
+      }
+    }
+  },
+    "scenarios": [
+      {
+      "name": "Create users get token and create tournament",
+      "flow":[
+        {
+          "function":  "createUserData"
+        },
+      {
+        "post":{
+          "url": "/api/v1/signup",
+        "afterResponse": "getToken",
+          "json": {
+            "fullname": "{{ fullname }}" ,
+            "password": "{{ password }}",
+            "email": "{{ email }}",
+            "notification": true
+          }
+        }
+      },
+      {
+        "function":  "createTournament"
+      },
+      {
+        "post":{
+          "url": "/api/v1/tournament/create",
+          "headers": {
+            "Authorization": "Bearer {{ token }}"
+          },
+          "json": {
+            "name": "{{ name }}"
+          }
+        }
+      }
+    ]
+    }
+  ]
+}
