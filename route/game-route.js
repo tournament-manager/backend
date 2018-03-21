@@ -14,14 +14,14 @@ module.exports = function (router){
   router.route('/game/:_id?')
       
     .get(bearerAuthMiddleware,(request,response) => {
-      //  returns one team
+      //  returns one game
       if(request.params._id){
         return Game.findById(request.params._id)
           .then(game => response.status(200).json(game))
           .catch(error => errorHandler(error,response));
       }
 
-      // returns all the team
+      // returns all the games
       
       return Game.find()
         .then(games => {
@@ -45,6 +45,7 @@ module.exports = function (router){
             game.teamAResult = request.body.teamAResult || game.teamAResult;
             game.teamB = request.body.teamB || game.teamB;
             game.teamBResult = request.body.teamBResult || game.teamBResult;
+            game.complete = request.body.complete || game.complete;
 
             
             return game.save();
