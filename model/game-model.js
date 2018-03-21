@@ -11,6 +11,7 @@ const Game = mongoose.Schema({
   'teamAResult': {type: Number},
   'teamB': {type: mongoose.Schema.Types.ObjectId, ref: 'team'},
   'teamBResult': {type: Number},
+  'complete': {type: Boolean},
 
 }, {timestamps: true});
 
