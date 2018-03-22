@@ -48,7 +48,8 @@ module.exports = function (router){
         .then(() => response.sendStatus(204))
         .catch(error => errorHandler(error,response));
     })
-    .get(bearerAuthMiddleware,(request,response) => {
+    //.get(bearerAuthMiddleware,(request,response) => {
+    .get((request,response) => {
       //  returns one team
       if(request.params._id){
         return Tournament.findById(request.params._id)
@@ -62,9 +63,9 @@ module.exports = function (router){
       
       return Tournament.find()
         .then(tournaments => {
-          let tournamentIds = tournaments.map(tournament => tournament._id);
-
-          response.status(200).json(tournamentIds);
+          //let tournamentIds = tournaments.map(tournament => tournament._id);
+          response.status(200).json(tournaments);
+          //response.status(200).json(tournamentIds);
         })
         .catch(error => errorHandler(error,response));
       

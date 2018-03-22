@@ -12,7 +12,8 @@ module.exports = function (router){
   
   router.route('/teams/:_id?')
       
-    .get(bearerAuthMiddleware,(request,response) => {
+    // .get(bearerAuthMiddleware,(request,response) => {
+    .get((request,response) => {
       //  returns one team
       if(request.params._id){
         return Team.findById(request.params._id)
@@ -24,9 +25,9 @@ module.exports = function (router){
       
       return Team.find()
         .then(teams => {
-          let teamIds = teams.map(team => team._id);
-
-          response.status(200).json(teamIds);
+          response.status(200).json(teams);
+          //let teamIds = teams.map(team => team._id);
+          //response.status(200).json(teamIds);
         })
         .catch(error => errorHandler(error,response));
       
