@@ -39,7 +39,7 @@ User.methods.comparePasswordHash = function(password) {
 User.methods.generateTokenSeed = function() {
   this.tokenSeed = crypto.randomBytes(32).toString('hex');
   return this.save()
-    .then(() => Promise.resolve(this.compareHash))
+    .then(() => Promise.resolve(this.tokenSeed))
     .catch(() => this.generateTokenSeed()); // This line is not very robust... potential loop
 };
 
