@@ -114,6 +114,7 @@ describe('simple mock test', () => {
       .set('Authorization', `Bearer ${token}`)
       .send(teams)
       .then((response) => {
+        console.log('division populates div', divisionNumber)
         expect(response.status).toBe(204);
            
       });  

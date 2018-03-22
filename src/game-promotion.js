@@ -27,7 +27,7 @@ module.exports = function(divisionId) {
     Game.find({division:`${divisionId}`})
       .then(result => {
         result.sort();
-        // console.log('sorted result of find games by division',result);
+        console.log('sorted result of find games by division',result);
         result.forEach(game => {
           let index = game.gamenumber - 1;
           if(game.gamenumber === 1) {
@@ -124,6 +124,7 @@ module.exports = function(divisionId) {
             }
           }
         });
+        console.log('return of for each',resultsArrayofObject );
         let returnObject = {};
         returnObject.poolA = {};
         returnObject.poolB = {};
@@ -180,73 +181,32 @@ module.exports = function(divisionId) {
         returnObject.semi.game1 = result[28]._id;
         returnObject.semi.game2 = result[29]._id;
         returnObject.final = result[30]._id;
-        // returnObject.poolA.first ? result[24].teamA = returnObject.poolA.first : undefined;
-        let options = {new : true, runValidators : true};
-        if(returnObject.poolA.first) {
-          console.log('in if for find by id', result[24]._id)
-          return Game.find(result[24]._id)
-            .then(object => console.log('new object', object))
-            .catch(err => console.error(err));
-        }
-        // returnObject.poolB.second ? result[24].teamB = returnObject.poolB.second : undefined;
-        // returnObject.poolA.second ? result[25].teamA = returnObject.poolA.second : undefined;
-        // returnObject.poolB.first ? result[25].teamB = returnObject.poolB.first : undefined;
-        // returnObject.poolC.first ? result[26].teamA = returnObject.poolC.first : undefined;
-        // returnObject.poolD.second ? result[26].teamB = returnObject.poolD.second : undefined;
-        // returnObject.poolC.second ? result[27].teamA = returnObject.poolC.second : undefined;
-        // returnObject.poolD.first ? result[27].teamB = returnObject.poolD.first : undefined;
-        // // console.log('______________________________________');
+        // console.log('______________________________________');
         // console.log('return object', returnObject);
         // console.log('______________________________________');
-        console.log('result array', result[24], result[25], result[26], result[27]);
 
-        // return result[24].save()
-        //   .then(() => result[25].save())
-        //   .then(() => result[26].save())
-        //   .then(() => result[27].save())
-        //   .catch(err => console.error(err));
 
-        // // console.log('results array from logic',resultsArrayofObject );
-        // return returnObject;
+
+        // console.log('results array from logic',resultsArrayofObject );
+        return returnObject;
         
       })
       //_______________________________________________________________________
       .then(object => {
         console.log('object in 2nd then', object);
-        // if(object.poolA.first) {
-        //   console.log('in if statement ',object.consolidation.game1);
-        //   let congame1 = object.consolidation.game1;
-        //   Game.find({_id:`${congame1}`})
-        //     .then(result => console.log('bbbbbbbb',result))
-        //     .catch(err => console.error(err));
-        // }
-        // //   //------------------------------------------------------------
-        // //   .then(game => {
-        // //     if(game._id === object.consolidation.game1) {
-        // //       game.teamA = object.poolA.first;
-        // //       game.teamB = object.poolB.second;
-        // //       return game.save();
-        // //     })
-        // //   .then(game => next())
-        //   .catch(err => console.error(err));
-        //   //---------------------------------------------------------------
-        //   game.findById(object.consolidation.game2)
+        
 
-        //   }
-        // }
 
-        // .then(object => {
-        //   console.log('in 3rd then '. object)
-        // })
-        return object;
+
+
+
+
+
+
+
+        return resolve([1,23,4]);
+
       })
-      
-
-
-
-
-
-      // })
       .catch(err => reject(err));
       
 
