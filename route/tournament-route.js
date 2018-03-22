@@ -13,13 +13,26 @@ module.exports = function (router){
   
   router.route('/tournament/create')
     .post(bearerAuthMiddleware,bodyParser,(request,response) => {
-      request.director = request.user._id;
-
+      request.body.director = request.user._id;
+      console.log('tournament director', request.director);
       return new Tournament(request.body).save()
         .then(createdTournament => response.status(201).json(createdTournament))
         .catch(error => errorHandler(error,response));
     });
-  router.route('/tournament/:_id?')
+  router.route('/tournament/user')
+    .get(bearerAuthMiddleware,bodyParser,(request,response) => {
+      console.log(request.user._id);
+
+      return Tournament.find({director:`${request.user._id}`})
+        .then(tournaments => {
+          response.status(200).json(tournaments);
+        })
+        .catch(error => errorHandler(error,response));
+
+    
+    });
+
+  router.route('/tournament/:_id')
     .delete(bearerAuthMiddleware,(request,response) => {
       return Tournament.findById(request.params._id)
         .then(tournament => {

@@ -129,6 +129,10 @@ module.exports = function(divisionId) {
         returnObject.poolB = {};
         returnObject.poolC = {};
         returnObject.poolD = {};
+        returnObject.consolidation = {};
+        returnObject.semi = {};
+        
+        
         for (let i = 0; i < 4; i ++) {
           let teamname = `team${i + 1}`;
           returnObject.poolA[teamname] = resultsArrayofObject[i];
@@ -169,10 +173,16 @@ module.exports = function(divisionId) {
           returnObject.poolD.second = resultsArrayofObject.slice(12,16).sort((a, b) => b.points - a.points)[1].teamId;
         }
         
-                
-        console.log('______________________________________');
-        console.log('return object', returnObject);
-        console.log('______________________________________');
+        returnObject.consolidation.game1 = result[24]._id;
+        returnObject.consolidation.game2 = result[25]._id;
+        returnObject.consolidation.game3 = result[26]._id;
+        returnObject.consolidation.game4 = result[27]._id;
+        returnObject.semi.game1 = result[28]._id;
+        returnObject.semi.game2 = result[29]._id;
+        returnObject.final = result[30]._id;
+        // console.log('______________________________________');
+        // console.log('return object', returnObject);
+        // console.log('______________________________________');
 
 
 
@@ -180,10 +190,35 @@ module.exports = function(divisionId) {
         return returnObject;
         
       })
+      //_______________________________________________________________________
       .then(object => {
-        if(object.poolA.complete) {
+        console.log('object in 2nd then', object);
+        if(object.poolA.first && object.poolB.second) {
+          Game.findById(object.consolidation.game1)
+          //------------------------------------------------------------
+          .then(game => {
+            if(game._id === object.consolidation.game1) {
+              game.teamA = object.poolA.first;
+              game.teamB = object.poolB.second;
+              return game.save();
+            })
+          .then(game => next())
+          .catch(err => console.error(err));
+          //---------------------------------------------------------------
+          game.findById(object.consolidation.game2)
 
+          }
         }
+
+
+
+
+
+
+
+
+
+        return resolve([1,23,4]);
 
       })
       .catch(err => reject(err));
