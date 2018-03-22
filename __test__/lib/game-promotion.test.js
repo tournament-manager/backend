@@ -4,6 +4,7 @@ const gamePromo = require('../../src/game-promotion');
 const Division = require('../../model/division-model');
 const mock = require('../lib/mocks');
 const server = require('../../lib/server');
+const popTest = require('../../src/populate-test');
 var token;
 var divisionNumber;
 const superagent = require('superagent');
@@ -45,6 +46,12 @@ describe('testing the game promotion unit', () => {
       });
     
   });
+  // it('should return console log my test ', () => {
+    
+  //   popTest('5ab1cc7c099bbc09e047971e');
+      
+    
+  // });
 
 
 });
