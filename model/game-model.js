@@ -9,7 +9,7 @@ const Game = mongoose.Schema({
   'division': {type: mongoose.Schema.Types.ObjectId, required: true, ref: 'division'},
   'teamA': {type: mongoose.Schema.Types.ObjectId, ref: 'team', default: null},
   'teamAResult': {type: Number},
-  'teamB': {type: mongoose.Schema.Types.ObjectId, ref: 'team', defalut: null},
+  'teamB': {type: mongoose.Schema.Types.ObjectId, ref: 'team', default: null},
   'teamBResult': {type: Number},
   'complete': {type: Boolean},
 

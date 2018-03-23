@@ -8,22 +8,22 @@ var divisionNumber;
 var newUser = mock.new_user();
 var newDivision = mock.new_division('U10', 'boys');
 const teams = [
-  '5aaedafa6d4f732e2756a9c7',
-  '5aaee2b26938803307b06e5e',
-  '5aaf2b72f5326c4d62d63d90',
-  '5aaf2b82f5326c4d62d63d91',
-  '5aaf2b8df5326c4d62d63d92',
-  '5aaf2b98f5326c4d62d63d93',
-  '5aaf2ba4f5326c4d62d63d94',
-  '5aaf2baef5326c4d62d63d95',
-  '5aaf2bb8f5326c4d62d63d96',
-  '5aaf2bc3f5326c4d62d63d97',
-  '5aaf2bd1f5326c4d62d63d98',
-  '5aaf2bdcf5326c4d62d63d99',
-  '5aaf2be7f5326c4d62d63d9a',
-  '5aaf2bf2f5326c4d62d63d9b',
-  '5aaf2bfef5326c4d62d63d9c',
-  '5aaf2c09f5326c4d62d63d9d',
+  '5ab4059c50d3d8c6d51ed7ec',
+  '5ab405c52eb8fbc6e1308455',
+  '5ab405c8d8e780c6ede542fe',
+  '5ab405cb386d0ec6f943830c',
+  '5ab405ce5f2813c7050672bf',
+  '5ab405d2a5b983c711ff9272',
+  '5ab405d53c9db4c71d6ba8c7',
+  '5ab405d837580ec7296ab737',
+  '5ab405dca9c964c7356d0413',
+  '5ab405dfbdfee9c741c86470',
+  '5ab405e2db7dabc74d1858b9',
+  '5ab405e7d87f6ec7592b4491',
+  '5ab405ea867f25c7657ccab5',
+  '5ab405ed171c60c7711f0575',
+  '5ab405f1fe431ec77ddb7be1',
+  '5ab405f4a0ae00c789704a8b',
 ];
 
 var token;
@@ -114,7 +114,7 @@ describe('simple mock test', () => {
       .set('Authorization', `Bearer ${token}`)
       .send(teams)
       .then((response) => {
-        console.log('division populates div', divisionNumber)
+        console.log('division populates div', divisionNumber);
         expect(response.status).toBe(204);
            
       });  

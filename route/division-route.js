@@ -5,6 +5,7 @@ const bodyParser = require('body-parser').json();
 const errorHandler = require('../lib/error-handler');
 const bearerAuthMiddleware = require('../lib/bearer-auth');
 const gamesPopulate = require('../src/games-for-division');
+const gamesPromotion = require('../src/game-promotion');
 
 const ERROR_MESSAGE = 'Authorization Failed';
 
@@ -19,6 +20,12 @@ module.exports = function (router){
         .then(createdDivision => response.status(201).json(createdDivision))
         .catch(error => errorHandler(error,response));
     });
+  router.route('/division/findresults/:id')
+  .get(bodyParser,(request,response) => {
+    return 
+      .then(createdDivision => response.status(201).json(createdDivision))
+      .catch(error => errorHandler(error,response));
+  });
 
   router.route('/division/populate/:_id')
     .post(bearerAuthMiddleware,bodyParser,(request,response) => {
