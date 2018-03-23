@@ -70,7 +70,7 @@ describe('simple mock test', () => {
       .set('Authorization', `Bearer ${token}`)
       .then((response) => {
         expect(response.status).toBe(200);
-        expect(response.body).not.toBe(null);
+        expect(response.body).toBeInstanceOf(Array);
         
       });  
   });
@@ -120,16 +120,16 @@ describe('simple mock test', () => {
       });  
   });
   
-  // it('should return a 204 code when a division is deleted', () => {
+  it('should return a 204 code when a division is deleted', () => {
     
-  //   return superagent.delete(`:${process.env.PORT}/api/v1/division/${divisionNumber}`)
-  //     .set('Authorization', `Bearer ${token}`)
-  //     .then((response) => {
-  //       expect(response.status).toBe(204);
+    return superagent.delete(`:${process.env.PORT}/api/v1/division/${divisionNumber}`)
+      .set('Authorization', `Bearer ${token}`)
+      .then((response) => {
+        expect(response.status).toBe(204);
       
         
-  //     });  
-  // });
+      });  
+  });
 
 
 });

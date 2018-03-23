@@ -13,7 +13,7 @@ module.exports = function (router){
   
   router.route('/game/:_id?')
       
-    .get(bearerAuthMiddleware,(request,response) => {
+    .get((request,response) => {
       //  returns one game
       if(request.params._id){
         return Game.findById(request.params._id)
@@ -25,9 +25,9 @@ module.exports = function (router){
       
       return Game.find()
         .then(games => {
-          let gameIds = games.map(game => game._id);
+          
 
-          response.status(200).json(gameIds);
+          response.status(200).json(games);
         })
         .catch(error => errorHandler(error,response));
       

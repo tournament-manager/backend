@@ -14,12 +14,12 @@ module.exports = function (router){
   
   router.route('/tournamentowner/user')
   
-    .get(bearerAuthMiddleware,bodyParser,(request,response) => {
+    .get(bodyParser,(request,response) => {
       console.log('request',request.user._id);
 
       return Tournament.find({director:request.user._id})
         .then(tournaments => {
-          console.log('tournaments for user', tournaments)
+          
           response.status(200).json(tournaments);
         })
         .catch(error => errorHandler(error,response));

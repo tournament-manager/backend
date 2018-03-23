@@ -62,7 +62,7 @@ module.exports = function (router){
 
   router.route('/division/:_id?')
       
-    .get(bearerAuthMiddleware,(request,response) => {
+    .get((request,response) => {
       //  returns one team
       if(request.params._id){
         return Division.findById(request.params._id)
@@ -74,9 +74,9 @@ module.exports = function (router){
       
       return Division.find()
         .then(divisions => {
-          let divisionIds = divisions.map(division => division._id);
+          
 
-          response.status(200).json(divisionIds);
+          response.status(200).json(divisions);
         })
         .catch(error => errorHandler(error,response));
       
