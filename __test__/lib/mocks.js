@@ -73,7 +73,7 @@ mock.new_team = (birthyear, classification) => (
 mock.game.create = () => {
    
   let newGame = new Game();
-  newGame.division = '5aaf248169009747716ed73d';
+  newGame.division = `5ab4e754c5eef667e4ba048e`;
   newGame.gamenumber = 1;
     
   return newGame.save()
