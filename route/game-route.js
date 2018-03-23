@@ -10,6 +10,24 @@ const ERROR_MESSAGE = 'Authorization Failed';
 
 module.exports = function (router){
 
+  router.route('/testgames/:_id')
+      
+    .get((request,response) => {
+      //  returns all games matching division id
+      if(request.params._id){
+        return Game.find({division:`${request.params._id}`})
+          .then(games => {
+            let gameIds = games.map(game => game._id);
+
+            response.status(200).json(gameIds);
+          })
+          .catch(error => errorHandler(error,response));
+
+        
+      }
+      
+    });
+
   
   router.route('/game/:_id?')
       
@@ -32,6 +50,7 @@ module.exports = function (router){
         .catch(error => errorHandler(error,response));
       
     })
+    
     .put(bearerAuthMiddleware,bodyParser,(request,response) => {
       Game.findById(request.params._id)
         .then(game => {
