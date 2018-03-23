@@ -8,9 +8,9 @@ require('jest');
 
 var newUser = mock.new_user();
 var testUser = new User();
-
 beforeAll(() => server.start());
 afterAll(() => server.stop());
+
 
 beforeAll(() => {
   return mock.user.create()

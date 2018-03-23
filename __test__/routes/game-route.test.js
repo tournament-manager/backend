@@ -13,6 +13,7 @@ beforeAll(() => server.start());
 beforeAll(() => {
   return mock.game.create()
     .then(gameData => {
+      console.log('gameData', gameData)
       return this.gameData = gameData;
     })
     .catch(err => console.error(err));
@@ -37,7 +38,6 @@ describe('simple mock test', () => {
   it('should return a 200 code if found', () => {
     
     return superagent.get(`:${process.env.PORT}/api/v1/game/${this.gameData._id}`)
-      .set('Authorization', `Bearer ${token}`)
       .then((response) => {
         expect(response.status).toBe(200);
               
@@ -46,7 +46,6 @@ describe('simple mock test', () => {
   it('should return a 200 code if found', () => {
     
     return superagent.get(`:${process.env.PORT}/api/v1/game`)
-      .set('Authorization', `Bearer ${token}`)
       .then((response) => {
         expect(response.status).toBe(200);
         expect(response.body).not.toBe(null);

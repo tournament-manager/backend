@@ -13,12 +13,13 @@ module.exports = function (router){
 
   router.route('/tournament/create')
     .post(bearerAuthMiddleware,bodyParser,(request,response) => {
-      request.director = request.user._id;
-
+      request.body.director = request.user._id;
+      console.log('tournament director', request.body.director);
       return new Tournament(request.body).save()
         .then(createdTournament => response.status(201).json(createdTournament))
         .catch(error => errorHandler(error,response));
     });
+
   router.route('/tournament/:_id?')
     .delete(bearerAuthMiddleware,(request,response) => {
       return Tournament.findById(request.params._id)
@@ -61,9 +62,8 @@ module.exports = function (router){
 
       return Tournament.find()
         .then(tournaments => {
-          let tournamentIds = tournaments.map(tournament => tournament._id);
-
-          response.status(200).json(tournamentIds);
+          
+          response.status(200).json(tournaments);
         })
         .catch(error => errorHandler(error,response));
 

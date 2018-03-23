@@ -7,6 +7,24 @@ require('jest');
 var divisionNumber;
 var newUser = mock.new_user();
 var newDivision = mock.new_division('U10', 'boys');
+const teams = [
+  '5ab4059c50d3d8c6d51ed7ec',
+  '5ab405c52eb8fbc6e1308455',
+  '5ab405c8d8e780c6ede542fe',
+  '5ab405cb386d0ec6f943830c',
+  '5ab405ce5f2813c7050672bf',
+  '5ab405d2a5b983c711ff9272',
+  '5ab405d53c9db4c71d6ba8c7',
+  '5ab405d837580ec7296ab737',
+  '5ab405dca9c964c7356d0413',
+  '5ab405dfbdfee9c741c86470',
+  '5ab405e2db7dabc74d1858b9',
+  '5ab405e7d87f6ec7592b4491',
+  '5ab405ea867f25c7657ccab5',
+  '5ab405ed171c60c7711f0575',
+  '5ab405f1fe431ec77ddb7be1',
+  '5ab405f4a0ae00c789704a8b',
+];
 
 var token;
 
@@ -52,8 +70,7 @@ describe('simple mock test', () => {
       .set('Authorization', `Bearer ${token}`)
       .then((response) => {
         expect(response.status).toBe(200);
-        
-        expect(response.body).not.toBe(null);
+        expect(response.body).toBeInstanceOf(Array);
         
       });  
   });
@@ -79,16 +96,6 @@ describe('simple mock test', () => {
         
       });  
   });
-  it('should return a 204 code when a division is deleted', () => {
-    
-    return superagent.delete(`:${process.env.PORT}/api/v1/division/${divisionNumber}`)
-      .set('Authorization', `Bearer ${token}`)
-      .then((response) => {
-        expect(response.status).toBe(204);
-      
-        
-      });  
-  });
   
   it('should return a 404 code when a division is not found', () => {
     
@@ -100,5 +107,29 @@ describe('simple mock test', () => {
         
       });  
   });
+
+  it('Should return a list of games when populate route is targeted ', () => {
+    
+    return superagent.post(`:${process.env.PORT}/api/v1/division/populate/${divisionNumber}`)
+      .set('Authorization', `Bearer ${token}`)
+      .send(teams)
+      .then((response) => {
+        console.log('division populates div', divisionNumber);
+        expect(response.status).toBe(204);
+           
+      });  
+  });
+  
+  it('should return a 204 code when a division is deleted', () => {
+    
+    return superagent.delete(`:${process.env.PORT}/api/v1/division/${divisionNumber}`)
+      .set('Authorization', `Bearer ${token}`)
+      .then((response) => {
+        expect(response.status).toBe(204);
+      
+        
+      });  
+  });
+
 
 });
