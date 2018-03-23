@@ -20,12 +20,12 @@ module.exports = function (router){
         .then(createdDivision => response.status(201).json(createdDivision))
         .catch(error => errorHandler(error,response));
     });
-  router.route('/division/findresults/:id')
-  .get(bodyParser,(request,response) => {
-    return 
-      .then(createdDivision => response.status(201).json(createdDivision))
-      .catch(error => errorHandler(error,response));
-  });
+  router.route('/division/findresults/:_id')
+    .get(bodyParser,(request,response) => {
+      gamesPromotion(request.params._id)
+        .then(divisionResults => response.status(201).json(divisionResults))
+        .catch(error => errorHandler(error,response));
+    });
 
   router.route('/division/populate/:_id')
     .post(bearerAuthMiddleware,bodyParser,(request,response) => {

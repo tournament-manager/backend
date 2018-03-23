@@ -132,20 +132,36 @@ module.exports = function(divisionId) {
         returnObject.semi = {};
         
         
+        // for (let i = 0; i < 4; i ++) {
+        //   let teamname = `team${i + 1}`;
+        //   returnObject.poolA[teamname] = resultsArrayofObject[i];
+        // }
         for (let i = 0; i < 4; i ++) {
-          let teamname = `team${i + 1}`;
+          let teamname = resultsArrayofObject[i].teamId;
           returnObject.poolA[teamname] = resultsArrayofObject[i];
         }
+        // for (let i = 4; i < 8; i ++) {
+        //   let teamname = `team${i + 1}`;
+        //   returnObject.poolB[teamname] = resultsArrayofObject[i];
+        // }
         for (let i = 4; i < 8; i ++) {
-          let teamname = `team${i + 1}`;
+          let teamname = resultsArrayofObject[i].teamId;
           returnObject.poolB[teamname] = resultsArrayofObject[i];
         }
+        // for (let i = 8; i < 12; i ++) {
+        //   let teamname = `team${i + 1}`;
+        //   returnObject.poolC[teamname] = resultsArrayofObject[i];
+        // }
         for (let i = 8; i < 12; i ++) {
-          let teamname = `team${i + 1}`;
+          let teamname = resultsArrayofObject[i].teamId;
           returnObject.poolC[teamname] = resultsArrayofObject[i];
         }
+        // for (let i = 12; i < 16; i ++) {
+        //   let teamname = `team${i + 1}`;
+        //   returnObject.poolD[teamname] = resultsArrayofObject[i];
+        // }
         for (let i = 12; i < 16; i ++) {
-          let teamname = `team${i + 1}`;
+          let teamname = resultsArrayofObject[i].teamId;
           returnObject.poolD[teamname] = resultsArrayofObject[i];
         }
 
