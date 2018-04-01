@@ -1,6 +1,7 @@
 'use strict';
 
 const Division = require('../model/division-model');
+const Tournament = require('../model/tournament-model');
 const bodyParser = require('body-parser').json();
 const errorHandler = require('../lib/error-handler');
 const bearerAuthMiddleware = require('../lib/bearer-auth');
@@ -12,11 +13,20 @@ const ERROR_MESSAGE = 'Authorization Failed';
 
 module.exports = function (router){
 
-
-
   router.route('/division/create')
     .post(bearerAuthMiddleware,bodyParser,(request,response) => {
       return new Division(request.body).save()
+        .then(createdDivision => {
+          //add division id to divisions array in the tournament 
+          let tournamentId = createdDivision.tournament;
+          let divId = createdDivision._id;
+          Tournament.findById(tournamentId)
+            .then(tournament => {
+              tournament.divisions.push(divId);
+              tournament.save();
+            });
+          return createdDivision;
+        })
         .then(createdDivision => response.status(201).json(createdDivision))
         .catch(error => errorHandler(error,response));
     });
@@ -103,9 +113,19 @@ module.exports = function (router){
     .delete(bearerAuthMiddleware,(request,response) => {
       return Division.findById(request.params._id)
         .then(division => {
-          if(division._id.toString() === request.params._id.toString())
-            return division.remove();
-          
+          if(division._id.toString() === request.params._id.toString()){
+            let tournamentId = division.tournament;
+            let divId = division._id;
+            return division.remove()
+              .then(() => {
+                //remove the division from the divisions array in the tournament
+                Tournament.findById(tournamentId)
+                  .then(tournament => {
+                    tournament.divisions = tournament.divisions.filter(div => div._id !== divId);
+                    tournament.save();
+                  });
+              });
+          }
           return errorHandler(new Error(ERROR_MESSAGE),response);
         })
         .then(() => response.sendStatus(204))
