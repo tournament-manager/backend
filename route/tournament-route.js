@@ -61,8 +61,16 @@ module.exports = function (router){
       // returns all the team
 
       return Tournament.find()
+        .populate({
+          path: 'divisions',
+          populate: {
+            path: 'groupA groupB groupC groupD consolidation semiFinal final',
+            populate: {
+              path: 'teamA teamB',
+            },
+          },
+        })
         .then(tournaments => {
-          
           response.status(200).json(tournaments);
         })
         .catch(error => errorHandler(error,response));

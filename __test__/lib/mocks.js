@@ -79,6 +79,14 @@ mock.tournament.find = (id) =>{
     }); 
 };
 
+mock.tournament.findByUser = (username) => {
+  return Tournament.find()
+    .populate({
+      path : 'director' , 
+      match : { username : username },
+    });
+};
+
 mock.new_division = (ageGroup, classification) => (
   {
     name: `${faker.hacker.ingverb()} ${faker.hacker.adjective()} ${faker.hacker.noun()}`,
@@ -97,6 +105,10 @@ mock.new_team = (birthyear, classification) => (
 
 mock.team.create = (team) => {
   return Team(team).save();
+};
+
+mock.team.findByTournament = (id) => {
+  return Team.find({tournaments: id});
 };
 
 mock.division.create = (tournamentId, division) =>{
@@ -118,7 +130,6 @@ mock.division.populate = (teamsArray, divisionId) => {
     .then(returnArray => {
       // console.log('return from fn', returnArray);
 
-      
       return  Division.findById(divisionId)
         .then(division => {
           // console.log(division);
@@ -146,6 +157,10 @@ mock.division.find = (id) => {
         path: 'teamA teamB',
       },
     });
+};
+
+mock.team.bulk_write = (data) => {
+  return Team.bulkWrite(data);
 };
 
 mock.game.create = () => {

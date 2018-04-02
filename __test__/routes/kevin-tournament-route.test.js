@@ -87,6 +87,7 @@ describe('Tournament route POST test', function(){
       ))
         .then(teams => {
          // debug('teams created', teams);
+
           this.CreatedTeams = teams;
           let divisionTeams = {};
           this.CreatedTeams.forEach(team => {
@@ -95,9 +96,29 @@ describe('Tournament route POST test', function(){
           });
          // debug('divisionTeams', divisionTeams);
           this.divisionTeams = divisionTeams;
+
+          let team_bulkUpdate = teams.reduce((acc, cur) => {
+            acc.push(
+              { 
+                updateOne: {
+                  filter: {_id: cur._id},
+                  update: {tournaments: [...cur.tournaments, this.tournamentId]},
+                },
+              });
+            return acc;
+          },[]);
+          debug('bulkUpdate', team_bulkUpdate[0].updateOne.update.tournaments);
+          return mock.team.bulk_write(team_bulkUpdate);
         })
         .catch(console.error);
     });
+
+    // beforeAll(() => {
+    //   return  mock.teams.findByTournament(this.tournamentI)
+    //     .then(teams => {
+    //       debug('Teams by tournamnet', teams);
+    //     });
+    // });
 
     beforeAll(() => {
       return Promise.all(Object.keys(this.divisionTeams).map(divId => mock.division.populate(this.divisionTeams[divId], divId)))
