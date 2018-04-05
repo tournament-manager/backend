@@ -49,9 +49,18 @@ module.exports = function (router){
         .catch(error => errorHandler(error,response));
     })
     .get((request,response) => {
-      //  returns one team
+      //  returns one tournament
       if(request.params._id){
         return Tournament.findById(request.params._id)
+          .populate({
+            path: 'divisions',
+            populate: {
+              path: 'groupA groupB groupC groupD consolidation semiFinal final',
+              populate: {
+                path: 'teamA teamB',
+              },
+            },
+          })
           .then(tournament => response.status(200).json(tournament))
           .catch(error => {
             errorHandler(error,response);
@@ -61,15 +70,15 @@ module.exports = function (router){
       // returns all the team
 
       return Tournament.find()
-        .populate({
-          path: 'divisions',
-          populate: {
-            path: 'groupA groupB groupC groupD consolidation semiFinal final',
-            populate: {
-              path: 'teamA teamB',
-            },
-          },
-        })
+        // .populate({
+        //   path: 'divisions',
+        //   populate: {
+        //     path: 'groupA groupB groupC groupD consolidation semiFinal final',
+        //     populate: {
+        //       path: 'teamA teamB',
+        //     },
+        //   },
+        // })
         .then(tournaments => {
           response.status(200).json(tournaments);
         })

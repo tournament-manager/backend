@@ -18,12 +18,16 @@ module.exports = function(teams, divisionId) {
       currentGame.teamA = teams[(e[0]-1)];
       currentGame.teamB = teams[(e[1]-1)];
       currentGame.division = divisionId;
+      //Add group amnd letter to game
+      currentGame.eliminationRound = `group${String.fromCharCode(Math.ceil((index + 1)/6) + 64)}`;
       holdingArray.push(currentGame);
     });
+    let eliminationRound = ['consolidation', 'consolidation', 'semiFinal', 'final'];
     for (let i = 25; i < 32; i ++) {
       let currentGame = {};
       currentGame.gamenumber = i;
       currentGame.division = divisionId;
+      currentGame.eliminationRound = `${eliminationRound[Math.ceil((i - 24) / 2)] - 1}`;
       holdingArray.push(currentGame);
        
     }

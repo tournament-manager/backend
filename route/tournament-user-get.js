@@ -15,19 +15,19 @@ module.exports = function (router){
   router.route('/tournamentowner/user')
   
     .get(bearerAuthMiddleware, (request,response) => {
-      console.log('request',request.user._id);
+      // console.log('request',request.user._id);
 
       //populate divisions games and teams
       return Tournament.find({director:request.user._id})
-        .populate({
-          path: 'divisions',
-          populate: {
-            path: 'groupA groupB groupC groupD consolidation semiFinal final',
-            populate: {
-              path: 'teamA teamB',
-            },
-          },
-        })
+        // .populate({
+        //   path: 'divisions',
+        //   populate: {
+        //     path: 'groupA groupB groupC groupD consolidation semiFinal final',
+        //     populate: {
+        //       path: 'teamA teamB',
+        //     },
+        //   },
+        // })
         .then(tournaments => {
           
           response.status(200).json(tournaments);
