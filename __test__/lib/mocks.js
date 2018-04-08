@@ -6,6 +6,7 @@ const Tournament = require('../../model/tournament-model');
 const Division = require('../../model/division-model');
 const Team = require('../../model//team-model');
 const Game = require('../../model/game-model');
+const TeamPoints = require('../../model/team-points');
 const debug = require('debug')('http:mock');
 const gamesPopulate = require('../../src/games-for-division');
 
@@ -17,6 +18,7 @@ mock.game = {};
 mock.division = {};
 mock.team = {};
 mock.tournament = {};
+mock.teamPoints = {};
 
 // mock.new_user = () => ({
 //   fullname: `${faker.name.firstName()} ${faker.name.lastName()}`,
@@ -174,6 +176,21 @@ mock.game.create = () => {
       return game;
     })
     .catch(console.error);
+};
+
+mock.teamPoints.createAll = (divisionTeams) => {
+  let teamPoint_schemas = Object.keys(divisionTeams).reduce((teamPointsArray, division) => {
+    divisionTeams[division].forEach(team => {
+      teamPointsArray.push({
+        division: division,
+        team: team,
+      });
+    });
+    return teamPointsArray;
+  }, []);
+
+  return TeamPoints.create(teamPoint_schemas);
+
 };
 
 mock.removeUsers = () => Promise.all([User.remove()]); 

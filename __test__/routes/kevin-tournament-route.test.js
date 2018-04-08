@@ -136,6 +136,12 @@ describe('Tournament route POST test', function(){
         });
     });
 
+    beforeAll(() => {
+      return mock.teamPoints.createAll(this.divisionTeams);
+    });
+
+  
+
     // beforeAll(() => {
     //   return mock.tournament.find(this.tournamentId)
     //     .then(tournament => {
