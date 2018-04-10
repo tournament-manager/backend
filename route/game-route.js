@@ -3,6 +3,7 @@
 const Game = require('../model/game-model');
 const TeamPoints = require('../model/team-points' );
 const pointTally = require('../src/point_tally');
+const advanceTeams = require('../src/advance-teams');
 const bodyParser = require('body-parser').json();
 const errorHandler = require('../lib/error-handler');
 const bearerAuthMiddleware = require('../lib/bearer-auth');
@@ -53,13 +54,14 @@ module.exports = function (router){
                
               game.teamARollingTotal += teamPointsArray[indexA].points;
               game.teamBRollingTotal += teamPointsArray[indexB].points;
-              
-              Promise.all([
+
+              return Promise.all([
                 teamPointsArray[0].save(),
                 teamPointsArray[0].save(),
                 game.save(),
               ]);
-            });
+            })
+            .then(returnedPromises => advanceTeams(returnedPromises[2]));
         })
         .then(() => response.sendStatus(204))
         .catch(error => errorHandler(error,response));

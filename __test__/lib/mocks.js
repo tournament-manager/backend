@@ -9,6 +9,8 @@ const Game = require('../../model/game-model');
 const TeamPoints = require('../../model/team-points');
 const debug = require('debug')('http:mock');
 const gamesPopulate = require('../../src/games-for-division');
+const pointTally = require('../../src/point_tally');
+const advanceTeams = require('../../src/advance-teams');
 
 debug('mock data');
 
@@ -176,6 +178,82 @@ mock.game.create = () => {
       return game;
     })
     .catch(console.error);
+};
+
+mock.game.scorecard = (games) => {
+
+  //bulkwrite array for games
+  let gamesUpdate = [];
+  //bulkwrite array for teamPoints
+  let teamPointsUpdate = []; 
+  //map of team point totals;
+  let teamPointsTotals = {};
+
+  //sort games asscending by game number
+  games = games.sort((a,b) => a.gamenumber - b.gamenumber);
+
+  //create update objects for game bulkwrite
+  games.forEach(game => {
+    if (game.gamenumber > 24) return;
+
+    //randomly generate scores for each team
+    let [teamAResult, teamBResult] = ['teamAResult', 'teamBResult'].map(() =>   Math.floor(Math.random() * 4));
+    //tally points for each team
+    let {a: pointsA, b: pointsB} = pointTally(teamAResult, teamBResult);
+
+    debug('game', game);
+
+    if (!teamPointsTotals[game.teamA._id]) teamPointsTotals[game.teamA._id] = 0;
+    if (!teamPointsTotals[game.teamB._id]) teamPointsTotals[game.teamB._id] = 0;
+
+    teamPointsTotals[game.teamA._id] += pointsA;
+    teamPointsTotals[game.teamB._id] += pointsB;
+
+    gamesUpdate.push(
+      { 
+        updateOne: {
+          filter: {_id: game._id},
+          update: {
+            teamAResult: teamAResult,
+            teamBResult: teamBResult,
+            teamAPoints: pointsA,
+            teamBPoints: pointsB,
+            teamARollingTotal: teamPointsTotals[game.teamA._id],
+            teamBRollingTotal: teamPointsTotals[game.teamB._id],
+            complete: true,
+          },
+        },
+      });
+  });
+
+  debug('gamesUpdate', gamesUpdate[0]);
+
+  //create update objects for teamPoints bulkwrite
+  Object.keys(teamPointsTotals).forEach(team => {
+    teamPointsUpdate.push(
+      { 
+        updateOne: {
+          filter: {team: team, division: games[0].division},
+          update: {
+            points: teamPointsTotals[team],
+          },
+        },
+      }
+    );
+  });
+
+  debug('teamPointsUpdate', teamPointsUpdate[0]);
+
+  return Promise.all([
+    TeamPoints.bulkWrite(teamPointsUpdate),
+    Game.bulkWrite(gamesUpdate),
+  ]);
+  
+};   
+
+mock.game.advanceTeams = (game) =>{
+  debug('game', game);
+  return advanceTeams(game);
 };
 
 mock.teamPoints.createAll = (divisionTeams) => {
