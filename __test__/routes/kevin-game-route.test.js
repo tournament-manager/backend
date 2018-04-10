@@ -107,16 +107,42 @@ describe('Game route scorecard test', function(){
     });
 
     beforeAll(() => {
-      let gamesArray = ['groupA', 'groupB', 'groupC', 'groupD', 'consolidation', 'semiFinal', 'final'].reduce((gamesList, round) => gamesList.concat(this.games[round]),[]);
+      let gamesArray = ['groupA', 'groupB', 'groupC', 'groupD'].reduce((gamesList, round) => gamesList.concat(this.games[round]),[]);
       return mock.game.scorecard(gamesArray);
     });
 
     beforeAll(() => {
+      //advance group play round
       return Promise.all(
         [6, 12, 18, 24].map(gameNumber  => mock.game.advanceTeams({division: this.division._id, gamenumber: gameNumber}))
       );
     });
 
+    //add scores to consolidation round
+    beforeAll(() => {
+      return mock.division.find(this.division._id)
+        .then(division => mock.game.scorecard(division.consolidation));
+    });
+
+    //advance consolidation round
+    beforeAll(() => {
+      return Promise.all(
+        [28].map(gameNumber  => mock.game.advanceTeams({division: this.division._id, gamenumber: gameNumber}))
+      );
+    });
+
+    //add scores to consolidation round
+    beforeAll(() => {
+      return mock.division.find(this.division._id)
+        .then(division => mock.game.scorecard(division.semiFinal));
+    });
+
+    //advance consolidation round
+    beforeAll(() => {
+      return Promise.all(
+        [30].map(gameNumber  => mock.game.advanceTeams({division: this.division._id, gamenumber: gameNumber}))
+      );
+    });
 
     it('should create a new tournament', () => {
       expect(this.TournamentData).not.toBeNull();

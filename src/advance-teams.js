@@ -18,8 +18,11 @@ const nextGames = {
 };
 
 const calculateWinner = (game) => {
+  console.log('Caluculate Winner game', game);
   let teamAResults = game.teamAResults;
   let teamBResults = game.teamBResults;
+  game.teamA.pointsTotal = game.teamARollingTotal;
+  game.teamB.pointsTotal = game.teamBRollingTotal;
   if (teamAResults === teamAResults){
     return game.teamARollingTotal > game.teamBRollingTotal ? game.teamA : game.teamB;
   }
@@ -31,7 +34,9 @@ module.exports = function(game){
   console.log('game', game);
   let divisionRound = getDivisionRound(game.gamenumber);
 
-  Division.findById(game.division)
+  console.log('divisionRound', divisionRound);
+
+  return Division.findById(game.division)
     .populate({
       path: divisionRound,
       populate: {
@@ -77,7 +82,7 @@ module.exports = function(game){
           winningTeams.map((team, i) => {
             let teamSlot = !i ? 'teamA' : 'teamB';
             return Game.where({division: game.division, gamenumber: nextGames[divisionRound][i]})
-              .update({[teamSlot]: team._id});
+              .update({[teamSlot]: team._id, [`${teamSlot}RollingTotal`]: team.pointsTotal});
           })
         )
           .then(returnArray => returnArray.map(item => console.log('returnArray', item)));
@@ -91,7 +96,7 @@ module.exports = function(game){
         let winningTeams = division[divisionRound].reduce((gameWinners, game) => {
           let winner = calculateWinner(game);
           winner.gameNumber = game.gamenumber;
-          gameWinners[Math.floor(game.gameNumber / 27)].push(winner);
+          gameWinners[Math.floor(game.gamenumber / 27)].push(winner);
           return gameWinners;
         }, [[],[]]);
     
@@ -99,13 +104,16 @@ module.exports = function(game){
           winningTeams.map((teams, i) => {
             let gameNumber = nextGames[divisionRound][i];
             return Game.where({division: game.division, gamenumber: gameNumber})
-              .update({teamA: teams[0]._id, teamB: teams[1]._id});
+              .update({teamA: teams[0]._id, teamARollingTotal: teams[0].pointsTotal, teamB: teams[1]._id, teamBRollingTotal: teams[1].pointsTotal});
           })
         );
       }
 
       //semifinal
+      let winnerA = calculateWinner(division[divisionRound][0]);
+      let winnerB = calculateWinner(division[divisionRound][1]);
       return Game.where({division: game.division, gamenumber: nextGames[divisionRound]})
-        .update({teamA: calculateWinner(division[divisionRound][0])._id, teamB: calculateWinner(division[divisionRound][1])._id});
-    });
+        .update({teamA: winnerA._id, teamARollingTotal: winnerA.pointsTotal, teamB: winnerB._id, teamBRollingTotal: winnerB.pointsTotal});
+    })
+    .catch(console.error);
 };

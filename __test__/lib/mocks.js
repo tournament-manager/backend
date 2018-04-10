@@ -194,7 +194,7 @@ mock.game.scorecard = (games) => {
 
   //create update objects for game bulkwrite
   games.forEach(game => {
-    if (game.gamenumber > 24) return;
+    //if (game.gamenumber > 24) return;
 
     //randomly generate scores for each team
     let [teamAResult, teamBResult] = ['teamAResult', 'teamBResult'].map(() =>   Math.floor(Math.random() * 4));
@@ -206,8 +206,8 @@ mock.game.scorecard = (games) => {
     if (!teamPointsTotals[game.teamA._id]) teamPointsTotals[game.teamA._id] = 0;
     if (!teamPointsTotals[game.teamB._id]) teamPointsTotals[game.teamB._id] = 0;
 
-    teamPointsTotals[game.teamA._id] += pointsA;
-    teamPointsTotals[game.teamB._id] += pointsB;
+    teamPointsTotals[game.teamA._id] += pointsA + game.teamARollingTotal;
+    teamPointsTotals[game.teamB._id] += pointsB + game.teamBRollingTotal;
 
     gamesUpdate.push(
       { 
