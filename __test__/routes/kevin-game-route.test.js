@@ -64,14 +64,26 @@ describe('Game route scorecard test', function(){
     beforeAll(() => {
       
       //create data for 16 teams
-      let teams = [...Array(16)].map(() => mock.new_team(2007, 'boys'));
+      //let teams = [...Array(16)].map(() => mock.new_team(2007, 'boys'));
 
-      return Promise.all(teams.map(team => 
+      //create data for 16 teams for each age group and year
+      let teams = ['boys', 'girls'].map(classify => [2009, 2008, 2007, 2006, 2005, 2004].reduce((acc, birthYear) => {     acc = [ ...acc, ...[...Array(16)].map(() => mock.new_team(birthYear, classify))];
+        return acc;
+      }, []));
+
+      this.allTeams = [...teams[0], ...teams[1]];
+      return Promise.all(this.allTeams.map(team => 
         mock.team.create(team)
       ))
+
+      // return Promise.all(teams.map(team => 
+      //   mock.team.create(team)
+      // ))
         .then(teams => {
-          debug('teams', teams);
-          this.teams = teams;
+          
+          
+          this.teams = teams.filter(team => team.classification === 'boys' && team.birthyear === '2007');
+          
           let team_bulkUpdate = teams.reduce((acc, cur) => {
             acc.push(
               { 
@@ -94,7 +106,7 @@ describe('Game route scorecard test', function(){
       return mock.division.populate(this.teams, this.division._id)
         .then(games => {
           this.games = games;
-          debug('games', games);
+          //debug('games', games);
         });
     });
 
@@ -102,7 +114,7 @@ describe('Game route scorecard test', function(){
     beforeAll(() => {
       return mock.teamPoints.createAll({[this.division._id]: this.teams})
         .then(teamPoints => {
-          debug('team points', teamPoints);
+          //debug('team points', teamPoints);
         });
     });
 
