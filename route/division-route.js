@@ -121,7 +121,7 @@ module.exports = function (router){
                 //remove the division from the divisions array in the tournament
                 Tournament.findById(tournamentId)
                   .then(tournament => {
-                    tournament.divisions = tournament.divisions.filter(div => div._id !== divId);
+                    tournament.divisions = tournament.divisions.filter(divisionId => divisionId.toString() !== divId.toString());
                     tournament.save();
                   });
               });
