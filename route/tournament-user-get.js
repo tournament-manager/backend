@@ -2,7 +2,7 @@
 
 const Tournament = require('../model/tournament-model');
 
-const bodyParser = require('body-parser').json();
+//const bodyParser = require('body-parser').json();
 const errorHandler = require('../lib/error-handler');
 const bearerAuthMiddleware = require('../lib/bearer-auth');
 
@@ -14,10 +14,20 @@ module.exports = function (router){
   
   router.route('/tournamentowner/user')
   
-    .get(bodyParser,(request,response) => {
-      console.log('request',request.user._id);
+    .get(bearerAuthMiddleware, (request,response) => {
+      // console.log('request',request.user._id);
 
+      //populate divisions games and teams
       return Tournament.find({director:request.user._id})
+        // .populate({
+        //   path: 'divisions',
+        //   populate: {
+        //     path: 'groupA groupB groupC groupD consolidation semiFinal final',
+        //     populate: {
+        //       path: 'teamA teamB',
+        //     },
+        //   },
+        // })
         .then(tournaments => {
           
           response.status(200).json(tournaments);

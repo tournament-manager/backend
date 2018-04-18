@@ -5,6 +5,7 @@ const Tournament = mongoose.Schema({
   'director': {type: mongoose.Schema.Types.ObjectId, ref: 'user'},
   'dateStart': {type: Date},
   'dateEnd': {type: Date},
+  'divisions':[{type: mongoose.Schema.Types.ObjectId, ref: 'division'}],
   
 }, {timestamps: true});
 

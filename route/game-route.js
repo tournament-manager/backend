@@ -1,6 +1,9 @@
 'use strict';
 
 const Game = require('../model/game-model');
+const TeamPoints = require('../model/team-points' );
+const pointTally = require('../src/point_tally');
+const advanceTeams = require('../src/advance-teams');
 const bodyParser = require('body-parser').json();
 const errorHandler = require('../lib/error-handler');
 const bearerAuthMiddleware = require('../lib/bearer-auth');
@@ -28,6 +31,41 @@ module.exports = function (router){
       
     });
 
+  router.route('/game/scorecard')
+    .put(bearerAuthMiddleware, bodyParser, (request, response) => {
+      let {a: pointsA, b: pointsB} = pointTally(request.body.teamAResult, request.body.teamBResult);
+      Game.findById(request.body._id)
+        .then(game => {
+          game.teamAResult = request.body.teamAResult;
+          game.teamBResult = request.body.teamBResult;
+          game.teamAPoints = pointsA;
+          game.teamBPoints = pointsB;
+          game.complete = true;
+          return game;
+        })
+        .then(game => {
+          TeamPoints.find({division: game.division, team: {$in: [game.teamA, game.teamB]}})
+            .then(teamPointsArray => {
+              let indexA = 0;
+              let indexB = 0;
+              game.teamA === teamPointsArray[0].team ? indexB = 1 : indexA = 1;
+              teamPointsArray[indexA].points += game.teamAPoints;
+              teamPointsArray[indexB].points += game.teamBPoints;
+               
+              game.teamARollingTotal += teamPointsArray[indexA].points;
+              game.teamBRollingTotal += teamPointsArray[indexB].points;
+
+              return Promise.all([
+                teamPointsArray[0].save(),
+                teamPointsArray[0].save(),
+                game.save(),
+              ]);
+            })
+            .then(returnedPromises => advanceTeams(returnedPromises[2]));
+        })
+        .then(() => response.sendStatus(204))
+        .catch(error => errorHandler(error,response));
+    });
   
   router.route('/game/:_id?')
       

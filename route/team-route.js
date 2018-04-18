@@ -60,4 +60,12 @@ module.exports = function (router){
         .then(() => response.sendStatus(204))
         .catch(error => errorHandler(error,response));
     });
+
+  //get teams associated with a tournament  
+  router.route('/teams/tournament/:_id')
+    .get(bearerAuthMiddleware, (request, response) => {
+      Team.find({tournaments: request.params._id})
+        .then(teams => response.status(200).json(teams))
+        .catch(error => errorHandler(error, response));
+    });
 };
