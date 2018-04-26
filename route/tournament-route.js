@@ -14,11 +14,20 @@ module.exports = function (router){
   router.route('/tournament/create')
     .post(bearerAuthMiddleware,bodyParser,(request,response) => {
       request.body.director = request.user._id;
-      console.log('tournament director', request.body.director);
+      //console.log('tournament director', request.body.director);
       return new Tournament(request.body).save()
         .then(createdTournament => response.status(201).json(createdTournament))
         .catch(error => errorHandler(error,response));
     });
+
+    // router.route('/tournament/create_demo')
+    // .post(bearerAuthMiddleware, bodyParser,(request,response) => {
+    //   request.body.director = request.user._id;
+    //   createDemoTournament();
+    //   return new Tournament(request.body).save()
+    //     .then(createdTournament => response.status(201).json(createdTournament))
+    //     .catch(error => errorHandler(error,response));
+    // });
 
   router.route('/tournament/:_id?')
     .delete(bearerAuthMiddleware,(request,response) => {
