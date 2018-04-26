@@ -1,3 +1,4 @@
+'use strict';
 
 const Division = require('../model/division-model');
 const Game = require('../model/game-model');
