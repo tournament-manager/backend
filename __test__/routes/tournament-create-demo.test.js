@@ -160,4 +160,24 @@ describe('Tournament route POST test', function(){
     });
  
   }); 
+
+  describe('Should create demo tournament data', () => {
+    
+    beforeAll(() => {
+      return this.demo = new DemoTournament(this.userData.user._id).createTournamentDemoData()
+        .then(tournament => {
+          return mock.tournament.find(tournament._id);
+        })
+        .then(tournament => {
+          return this.tournament = tournament;
+        });
+
+    });
+
+    it('should create a new tournament', () => {
+      expect(this.tournament.groupA[0].complete).toBe(true);
+    });
+    
+  });
+ 
 });

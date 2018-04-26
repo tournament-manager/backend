@@ -18,16 +18,15 @@ module.exports = class TournamentDemo {
     this.tournament = null;
   }
   createTournamentDemoData(){
-    Promise.all([
-      this.createTournament(),
-      this.createDivision(),
-      this.addDivision(),
-      this. createTeams(),
-      this.addTeams(),
-      this.populateDivision(),
-      this.createTeamPointsDocuments(),
-      this.scoreGroupGames(),
-    ]);
+    return this.createTournament()
+      .then(() => this.createDivision('U11', 'boys')) 
+      .then(() =>  this.addDivision())
+      .then(() => this.createTeams())
+      .then(() => this.addTeams('2007', 'boys'))
+      .then(() => this.populateDivision())
+      .then(() => this.createTeamPointsDocuments())
+      .then(() => this.scoreGroupGames())
+      .then(() => this.tournament);
   }
 
   createTournament(){
@@ -95,8 +94,7 @@ module.exports = class TournamentDemo {
   }
 
   addTeams(birthyear, classification){
-    this.teams = this.teams.filter(team => team.classification === classification && team.birthyear === birthyear);
-          
+    this.teams = this.teams.filter(team => team.classification === classification && team.birthyear === birthyear);   
     let team_bulkUpdate = this.teams.reduce((acc, cur) => {
       acc.push(
         { 
@@ -127,7 +125,7 @@ module.exports = class TournamentDemo {
               division.final = returnArray[6];
             
               return division.save()
-                .then(division => this.division = division);
+                .then(division => this._findDivision(division._id));
             }
             return null;
           });
@@ -143,6 +141,14 @@ module.exports = class TournamentDemo {
       return teamPointsArray;
     }, []);
     return TeamPoints.create(teamPoint_schemas);
+  }
+
+  _findDivision(divId){
+    return Division.findById(divId)
+      .populate({path:'groupA groupB groupC groupD'})
+      .then(division => {
+        return this.division = division;
+      });
   }
   
   scoreGroupGames(){
