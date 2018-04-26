@@ -8,9 +8,6 @@ const gamesPopulate = require('../src/games-for-division');
 const TeamPoints = require('../model/team-points');
 const pointTally = require('../src/point_tally');
 const Game = require('../model/game-model');
-// const debug = require('debug')('http:mock');
-// const advanceTeams = require('../../src/advance-teams');
-
 
 module.exports = class TournamentDemo {
   constructor(userId){
@@ -20,7 +17,7 @@ module.exports = class TournamentDemo {
   createTournamentDemoData(){
     return this.createTournament()
       .then(() => this.createDivision('U11', 'boys')) 
-      .then(() =>  this.addDivision())
+      .then(() => this.addDivision())
       .then(() => this.createTeams())
       .then(() => this.addTeams('2007', 'boys'))
       .then(() => this.populateDivision())
@@ -40,7 +37,6 @@ module.exports = class TournamentDemo {
     return new Tournament(tournament).save()
       .then(tournament => {
         return this.tournament = tournament;
-        //return this._createDivision(this.tournament);
       })
       .catch(err => err);
   }
@@ -56,7 +52,6 @@ module.exports = class TournamentDemo {
     return new Division(division).save()
       .then(division => {
         return  this.division = division;
-        //return this._addDivision();
       })
       .catch(err => err);
   }
@@ -145,7 +140,12 @@ module.exports = class TournamentDemo {
 
   _findDivision(divId){
     return Division.findById(divId)
-      .populate({path:'groupA groupB groupC groupD'})
+      .populate({
+        path:'groupA groupB groupC groupD',
+        populate: {
+          path: 'teamA teamB',
+        },
+      })
       .then(division => {
         return this.division = division;
       });
@@ -153,7 +153,7 @@ module.exports = class TournamentDemo {
   
   scoreGroupGames(){
     let games = ['groupA', 'groupB', 'groupC', 'groupD'].reduce((gamesList, round) => gamesList.concat(this.division[round]),[]);
- 
+
     //bulkwrite array for games
     let gamesUpdate = [];
     //bulkwrite array for teamPoints
@@ -168,7 +168,7 @@ module.exports = class TournamentDemo {
     games.forEach(game => {
       //don't score the last games in each group
       if (!(game.gamenumber % 6)) return;
-      
+   
       //randomly generate scores for each team
       let [teamAResult, teamBResult] = ['teamAResult', 'teamBResult'].map(() =>   Math.floor(Math.random() * 4));
       //tally points for each team
@@ -196,7 +196,7 @@ module.exports = class TournamentDemo {
           },
         });
     });
-    
+
     //create update objects for teamPoints bulkwrite
     Object.keys(teamPointsTotals).forEach(team => {
       teamPointsUpdate.push(

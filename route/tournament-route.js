@@ -5,6 +5,7 @@ const Tournament = require('../model/tournament-model');
 const bodyParser = require('body-parser').json();
 const errorHandler = require('../lib/error-handler');
 const bearerAuthMiddleware = require('../lib/bearer-auth');
+const TournamentDemo = require('../src/create-tournament-demo');
 
 const ERROR_MESSAGE = 'Authorization Failed';
 
@@ -20,14 +21,12 @@ module.exports = function (router){
         .catch(error => errorHandler(error,response));
     });
 
-    // router.route('/tournament/create_demo')
-    // .post(bearerAuthMiddleware, bodyParser,(request,response) => {
-    //   request.body.director = request.user._id;
-    //   createDemoTournament();
-    //   return new Tournament(request.body).save()
-    //     .then(createdTournament => response.status(201).json(createdTournament))
-    //     .catch(error => errorHandler(error,response));
-    // });
+  router.route('/tournament/create_demo')
+    .post(bearerAuthMiddleware, bodyParser,(request,response) => {
+      new TournamentDemo(request.user._id).createTournamentDemoData()
+        .then(demoTournament => response.status(201).json(demoTournament))
+        .catch(error => errorHandler(error,response));
+    });
 
   router.route('/tournament/:_id?')
     .delete(bearerAuthMiddleware,(request,response) => {

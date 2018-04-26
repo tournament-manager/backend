@@ -1,6 +1,6 @@
 'use strict';
 
-//const superagent = require('superagent');
+const superagent = require('superagent');
 const mock = require('../lib/mocks');
 const server = require('../../lib/server');
 const debug = require('debug')('http:kevin-tournament-create-demo-test');
@@ -108,7 +108,7 @@ describe('Tournament route POST test', function(){
     beforeAll(() => {
       return this.demo.populateDivision()
         .then(division => {
-          debug('division', division);
+         // debug('division', division);
           return this.division = division;
         });
     });
@@ -138,12 +138,15 @@ describe('Tournament route POST test', function(){
       return this.demo.scoreGroupGames()
         .then(pointsGames => {
           debug('pointsGames[1]', pointsGames[1]);
+          debug('teamPoints_status', pointsGames[0]);
           this.teamPoints_status =  pointsGames[0];
           this.scoredGames_status =  pointsGames[1];
-        });
+        })
+        .catch(console.error);
     });
 
     beforeAll(() => {
+      console.log('this.division._id', this.division._id);
       return mock.division.find(this.division._id)
         .then(division => {
           return this.division = division;
@@ -151,7 +154,7 @@ describe('Tournament route POST test', function(){
     });
 
     it('should modify games and teamPoints', () => {
-      expect(this.teamPoints_status.modifiedCount).toEqual(16);
+      expect(this.teamPoints_status.matchedCount).toEqual(16);
       expect(this.scoredGames_status.modifiedCount).toEqual(20);
     });
 
@@ -175,9 +178,26 @@ describe('Tournament route POST test', function(){
     });
 
     it('should create a new tournament', () => {
-      expect(this.tournament.groupA[0].complete).toBe(true);
+      expect(this.tournament.divisions[0].groupA[0].complete).toBe(true);
     });
     
+  });
+
+  describe('Should create demo tournament data when hitting the post route', () => {
+
+    beforeAll(() => {
+      return superagent.post(`${ __API_URL__}/tournament/create_demo`)
+        .set({'Authorization' : `Bearer ${this.userData.token}`})
+        .then(response => {
+          debug('response.body', response.body);
+          return this.tournament = response.body;
+        });
+    });
+
+    it('should create a new tournament', () => {
+      expect(this.tournament.director).toEqual(this.userData.user._id.toString());
+    });
+
   });
  
 });
