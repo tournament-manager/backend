@@ -48,7 +48,7 @@ module.exports = function (router){
             .then(teamPointsArray => {
               let indexA = 0;
               let indexB = 0;
-              game.teamA === teamPointsArray[0].team ? indexB = 1 : indexA = 1;
+              game.teamA.toString() === teamPointsArray[0].team.toString()? indexB = 1 : indexA = 1;
               teamPointsArray[indexA].points += game.teamAPoints;
               teamPointsArray[indexB].points += game.teamBPoints;
                
@@ -57,7 +57,7 @@ module.exports = function (router){
 
               return Promise.all([
                 teamPointsArray[0].save(),
-                teamPointsArray[0].save(),
+                teamPointsArray[1].save(),
                 game.save(),
               ]);
             })

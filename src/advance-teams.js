@@ -19,7 +19,6 @@ const nextGames = {
 };
 
 const calculateWinner = (game) => {
-  // console.log('Caluculate Winner game', game);
   let teamAResults = game.teamAResults;
   let teamBResults = game.teamBResults;
   game.teamA.pointsTotal = game.teamARollingTotal;
@@ -32,11 +31,7 @@ const calculateWinner = (game) => {
 
 
 module.exports = function(game){
-  // console.log('game', game);
   let divisionRound = getDivisionRound(game.gamenumber);
-
-  //console.log('divisionRound', divisionRound);
-
   return Division.findById(game.division)
     .populate({
       path: divisionRound,
@@ -45,9 +40,8 @@ module.exports = function(game){
       },
     })
     .then(division => {
-      console.log('division', division);
+     // console.log('division', division);
       if (!division[divisionRound].every(game => game.complete)) return;
-      // console.log('division', division, 'all complete');
       // group play promotion
       //groupA winner 1 plays game 25
       //groupA winner 2 plays game 27
@@ -65,7 +59,7 @@ module.exports = function(game){
         let lastGames = division[divisionRound].filter(game => 
           !((game.gamenumber + 1) % 6) || !(game.gamenumber % 6)
         );
-        //console.log('lastGames', lastGames);
+      
         let teams = lastGames.reduce((teamsArray, game) => {
           game.teamA.pointsTotal = game.teamARollingTotal;
           game.teamB.pointsTotal = game.teamBRollingTotal;
@@ -73,11 +67,7 @@ module.exports = function(game){
           return teamsArray;
         },[]);
 
-        //console.log('teams', teams);
-
         let winningTeams  = teams.sort((a, b) => b.pointsTotal - a.pointsTotal).slice(0,2);
-
-        //console.log('winningTeams', winningTeams);
 
         return Promise.all(
           winningTeams.map((team, i) => {
