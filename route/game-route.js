@@ -24,9 +24,7 @@ module.exports = function (router){
 
             response.status(200).json(gameIds);
           })
-          .catch(error => errorHandler(error,response));
-
-        
+          .catch(error => errorHandler(error,response)); 
       }
       
     });
