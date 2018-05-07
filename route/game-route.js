@@ -13,23 +13,6 @@ const ERROR_MESSAGE = 'Authorization Failed';
 
 
 module.exports = function (router){
-
-  router.route('/testgames/:_id')
-      
-    .get((request,response) => {
-      //  returns all games matching division id
-      if(request.params._id){
-        return Game.find({division:`${request.params._id}`})
-          .then(games => {
-            let gameIds = games.map(game => game._id);
-
-            response.status(200).json(gameIds);
-          })
-          .catch(error => errorHandler(error,response)); 
-      }
-      
-    });
-
   router.route('/game/scorecard')
     .put(bearerAuthMiddleware, bodyParser, (request, response) => {
       let {a: pointsA, b: pointsB} = pointTally(request.body.teamAResult, request.body.teamBResult);
@@ -50,7 +33,7 @@ module.exports = function (router){
               game.teamA.toString() === teamPointsArray[0].team.toString()? indexB = 1 : indexA = 1;
               teamPointsArray[indexA].points += game.teamAPoints;
               teamPointsArray[indexB].points += game.teamBPoints;
-               
+
               game.teamARollingTotal += teamPointsArray[indexA].points;
               game.teamBRollingTotal += teamPointsArray[indexB].points;
 
@@ -61,9 +44,9 @@ module.exports = function (router){
               ]);
             })
             .then(returnedPromises => advanceTeams(returnedPromises[2]))
-            //set the locked property of the division 
+            //set the locked property of the division
             //and tournament once a game has been scored
-            .then(division => { 
+            .then(division => {
               if (division.locked) return;
               division.locked = true;
               return division.save()
@@ -82,7 +65,6 @@ module.exports = function (router){
     });
   
   router.route('/game/:_id?')
-      
     .get((request,response) => {
       //  returns one game
       if(request.params._id){
@@ -92,21 +74,16 @@ module.exports = function (router){
       }
 
       // returns all the games
-      
       return Game.find()
         .then(games => {
-          
-
           response.status(200).json(games);
         })
         .catch(error => errorHandler(error,response));
-      
     })
-    
+
     .put(bearerAuthMiddleware,bodyParser,(request,response) => {
       Game.findById(request.params._id)
         .then(game => {
-          
           if(game._id.toString() === request.params._id.toString()){
             game.gamenumber = request.body.name || game.gamenumber;
             game.referee = request.body.referee || game.referee;
@@ -118,7 +95,6 @@ module.exports = function (router){
             game.teamBResult = request.body.teamBResult || game.teamBResult;
             game.complete = request.body.complete || game.complete;
 
-            
             return game.save();
           }
 

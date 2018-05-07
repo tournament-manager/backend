@@ -7,7 +7,6 @@ const Tournament = mongoose.Schema({
   'dateEnd': {type: Date},
   'divisions':[{type: mongoose.Schema.Types.ObjectId, ref: 'division'}],
   'locked': {type: Boolean, default: false},
-  
 }, {timestamps: true});
 
 

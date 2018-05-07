@@ -16,7 +16,7 @@ module.exports = class TournamentDemo {
   }
   createTournamentDemoData(){
     return this.createTournament()
-      .then(() => this.createDivision('U11', 'boys')) 
+      .then(() => this.createDivision('U11', 'boys'))
       .then(() => this.addDivision())
       .then(() => this.createTeams())
       .then(() => this.addTeams('2007', 'boys'))
@@ -27,7 +27,7 @@ module.exports = class TournamentDemo {
   }
 
   createTournament(){
-    let tournament = { 
+    let tournament = {
       name: `${faker.hacker.ingverb()} ${faker.hacker.adjective()} ${faker.hacker.noun()}`,
       director: this.userId,
       dateStart: new Date(),
@@ -81,7 +81,7 @@ module.exports = class TournamentDemo {
     }, []));
 
     let allTeams = [...teams[0], ...teams[1]];
-    return Promise.all(allTeams.map(team => 
+    return Promise.all(allTeams.map(team =>
       Team(team).save()
     ))
       .then(teams => this.teams = teams)
@@ -89,10 +89,10 @@ module.exports = class TournamentDemo {
   }
 
   addTeams(birthyear, classification){
-    this.teams = this.teams.filter(team => team.classification === classification && team.birthyear === birthyear);   
+    this.teams = this.teams.filter(team => team.classification === classification && team.birthyear === birthyear);
     let team_bulkUpdate = this.teams.reduce((acc, cur) => {
       acc.push(
-        { 
+        {
           updateOne: {
             filter: {_id: cur._id},
             update: {tournaments: [...cur.tournaments, this.tournament._id]},
@@ -118,7 +118,7 @@ module.exports = class TournamentDemo {
               division.consolidation = returnArray[4];
               division.semiFinal = returnArray[5];
               division.final = returnArray[6];
-            
+
               return division.save()
                 .then(division => this._findDivision(division._id));
             }
@@ -150,38 +150,38 @@ module.exports = class TournamentDemo {
         return this.division = division;
       });
   }
-  
+
   scoreGroupGames(){
     let games = ['groupA', 'groupB', 'groupC', 'groupD'].reduce((gamesList, round) => gamesList.concat(this.division[round]),[]);
 
     //bulkwrite array for games
     let gamesUpdate = [];
     //bulkwrite array for teamPoints
-    let teamPointsUpdate = []; 
+    let teamPointsUpdate = [];
     //map of team point totals;
     let teamPointsTotals = {};
-  
+
     //sort games asscending by game number
     games = games.sort((a,b) => a.gamenumber - b.gamenumber);
-  
+
     //create update objects for game bulkwrite
     games.forEach(game => {
       //don't score the last games in each group
       if (!(game.gamenumber % 6)) return;
-   
+
       //randomly generate scores for each team
       let [teamAResult, teamBResult] = ['teamAResult', 'teamBResult'].map(() =>   Math.floor(Math.random() * 4));
       //tally points for each team
       let {a: pointsA, b: pointsB} = pointTally(teamAResult, teamBResult);
-  
+
       if (!teamPointsTotals[game.teamA._id]) teamPointsTotals[game.teamA._id] = 0;
       if (!teamPointsTotals[game.teamB._id]) teamPointsTotals[game.teamB._id] = 0;
-  
+
       teamPointsTotals[game.teamA._id] += pointsA + game.teamARollingTotal;
       teamPointsTotals[game.teamB._id] += pointsB + game.teamBRollingTotal;
-  
+
       gamesUpdate.push(
-        { 
+        {
           updateOne: {
             filter: {_id: game._id},
             update: {
@@ -200,7 +200,7 @@ module.exports = class TournamentDemo {
     //create update objects for teamPoints bulkwrite
     Object.keys(teamPointsTotals).forEach(team => {
       teamPointsUpdate.push(
-        { 
+        {
           updateOne: {
             filter: {team: team, division: this.division._id},
             update: {
@@ -210,13 +210,11 @@ module.exports = class TournamentDemo {
         }
       );
     });
-  
+
     return Promise.all([
       TeamPoints.bulkWrite(teamPointsUpdate),
       Game.bulkWrite(gamesUpdate),
     ]);
-    
-  }
-  
 
+  }
 };

@@ -1,7 +1,6 @@
 'use strict';
 
 const Tournament = require('../model/tournament-model');
-
 const bodyParser = require('body-parser').json();
 const errorHandler = require('../lib/error-handler');
 const bearerAuthMiddleware = require('../lib/bearer-auth');
@@ -9,13 +8,11 @@ const TournamentDemo = require('../src/create-tournament-demo');
 
 const ERROR_MESSAGE = 'Authorization Failed';
 
-
 module.exports = function (router){
 
   router.route('/tournament/create')
     .post(bearerAuthMiddleware,bodyParser,(request,response) => {
       request.body.director = request.user._id;
-      //console.log('tournament director', request.body.director);
       return new Tournament(request.body).save()
         .then(createdTournament => response.status(201).json(createdTournament))
         .catch(error => errorHandler(error,response));
@@ -40,6 +37,7 @@ module.exports = function (router){
         .then(() => response.sendStatus(204))
         .catch(error => errorHandler(error,response));
     })
+
     .put(bearerAuthMiddleware,bodyParser,(request,response) => {
       Tournament.findById(request.params._id)
         .then(tournament => {
@@ -56,6 +54,7 @@ module.exports = function (router){
         .then(() => response.sendStatus(204))
         .catch(error => errorHandler(error,response));
     })
+
     .get((request,response) => {
       //  returns one tournament
       if(request.params._id){
@@ -75,22 +74,11 @@ module.exports = function (router){
           });
       }
 
-      // returns all the team
-
+      // returns all the tournaments
       return Tournament.find()
-        // .populate({
-        //   path: 'divisions',
-        //   populate: {
-        //     path: 'groupA groupB groupC groupD consolidation semiFinal final',
-        //     populate: {
-        //       path: 'teamA teamB',
-        //     },
-        //   },
-        // })
         .then(tournaments => {
           response.status(200).json(tournaments);
         })
         .catch(error => errorHandler(error,response));
-
     });
 };

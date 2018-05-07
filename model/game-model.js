@@ -2,8 +2,6 @@ const mongoose = require('mongoose');
 
 const Game = mongoose.Schema({
   'gamenumber': {type: Number, required: true},
-  'referee': {type: mongoose.Schema.Types.ObjectId, ref: 'referee'},
-  'field':{type: mongoose.Schema.Types.ObjectId, ref: 'field'},
   'startTime': {type: Date},
   'endTime': {type: Date},
   'division': {type: mongoose.Schema.Types.ObjectId, required: true, ref: 'division'},
@@ -15,7 +13,7 @@ const Game = mongoose.Schema({
   'teamBResult': {type: Number},
   'teamBPoints': {type: Number, default: 0},
   'teamBRollingTotal': {type: Number, default: 0},
-  'eliminationRound': {type: String}, 
+  'eliminationRound': {type: String},
   'complete': {type: Boolean},
 }, {timestamps: true});
 

@@ -40,7 +40,6 @@ module.exports = function(game){
       },
     })
     .then(division => {
-      // console.log('division', division);
       if (!division[divisionRound].every(game => game.complete)) return division;
       // group play promotion
       //groupA winner 1 plays game 25
@@ -55,11 +54,11 @@ module.exports = function(game){
       //groupD winner 1 plays game 28
       //groupD winner 2 plays game 26
 
-      if (divisionRound.match(/group/g)) { 
-        let lastGames = division[divisionRound].filter(game => 
+      if (divisionRound.match(/group/g)) {
+        let lastGames = division[divisionRound].filter(game =>
           !((game.gamenumber + 1) % 6) || !(game.gamenumber % 6)
         );
-      
+
         let teams = lastGames.reduce((teamsArray, game) => {
           game.teamA.pointsTotal = game.teamARollingTotal;
           game.teamB.pointsTotal = game.teamBRollingTotal;
@@ -76,7 +75,6 @@ module.exports = function(game){
               .update({[teamSlot]: team._id, [`${teamSlot}RollingTotal`]: team.pointsTotal});
           })
         )
-          //.then(returnArray => returnArray.map(item => console.log('returnArray', item)))
           .then(() => division);
       }
 
@@ -91,7 +89,7 @@ module.exports = function(game){
           gameWinners[Math.floor(game.gamenumber / 27)].push(winner);
           return gameWinners;
         }, [[],[]]);
-    
+
         return Promise.all(
           winningTeams.map((teams, i) => {
             let gameNumber = nextGames[divisionRound][i];

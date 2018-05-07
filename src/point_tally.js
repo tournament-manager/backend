@@ -15,12 +15,11 @@ module.exports = function (a, b) {
     totals.a += points;
     totals.b += points;
     return totals;
-  }  
+  }
 
   //winner gets 6 points
   points = 6;
   (a > b) ? totals.a += 6 : totals.b += 6;
-  
   //add shutout points
   if(a === 0 || b === 0 )
     a === 0 ? totals.b += 1 : totals.a += 1;

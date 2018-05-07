@@ -9,9 +9,8 @@ const ERROR_MESSAGE = 'Authorization Failed';
 
 
 module.exports = function (router){
-  
+
   router.route('/teams/:_id?')
-      
     .get((request,response) => {
       //  returns one team
       if(request.params._id){
@@ -21,16 +20,13 @@ module.exports = function (router){
       }
 
       // returns all the teams
-      
       return Team.find()
         .then(teams => {
-         
-
           response.status(200).json(teams);
         })
         .catch(error => errorHandler(error,response));
-      
     })
+
     .put(bearerAuthMiddleware,bodyParser,(request,response) => {
       Team.findById(request.params._id)
         .then(team => {
@@ -47,21 +43,9 @@ module.exports = function (router){
         })
         .then(() => response.sendStatus(204))
         .catch(error => errorHandler(error,response));
-    })
-
-    .delete(bearerAuthMiddleware,(request,response) => {
-      return Team.findById(request.params._id)
-        .then(team => {
-          if(team._id.toString() === request.params._id.toString())
-            return team.remove();
-          
-          return errorHandler(new Error(ERROR_MESSAGE),response);
-        })
-        .then(() => response.sendStatus(204))
-        .catch(error => errorHandler(error,response));
     });
 
-  //get teams associated with a tournament  
+  //get teams associated with a tournament
   router.route('/teams/tournament/:_id')
     .get(bearerAuthMiddleware, (request, response) => {
       Team.find({tournaments: request.params._id})
