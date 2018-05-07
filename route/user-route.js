@@ -33,7 +33,6 @@ module.exports = function(router) {
         return user;
       })
       .then(user => user.generateToken())
-      // .then(res => console.log('before token sent',res))
       .then(token => res.status(200).json(token))
       .catch(err => errorHandler(err, res));
   });

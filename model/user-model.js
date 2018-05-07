@@ -14,7 +14,6 @@ const User = mongoose.Schema({
   'tokenSeed': {type: String, unique: true},
   'notification': {type: Boolean, required: true},
   'isAdmin': [{type: mongoose.Schema.Types.ObjectId, ref: 'tournament'}],
-  'isReferee': [{type: mongoose.Schema.Types.ObjectId, ref: 'game'}],
 }, {timestamps: true});
 
 User.methods.generatePasswordHash = function(password) {
