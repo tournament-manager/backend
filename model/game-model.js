@@ -17,9 +17,7 @@ const Game = mongoose.Schema({
   'teamBRollingTotal': {type: Number, default: 0},
   'eliminationRound': {type: String}, 
   'complete': {type: Boolean},
-
 }, {timestamps: true});
-
 
 module.exports = mongoose.model('game', Game);
 

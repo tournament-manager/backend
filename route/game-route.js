@@ -2,6 +2,7 @@
 
 const Game = require('../model/game-model');
 const TeamPoints = require('../model/team-points' );
+const Tournament = require('../model/tournament-model');
 const pointTally = require('../src/point_tally');
 const advanceTeams = require('../src/advance-teams');
 const bodyParser = require('body-parser').json();
@@ -59,7 +60,22 @@ module.exports = function (router){
                 game.save(),
               ]);
             })
-            .then(returnedPromises => advanceTeams(returnedPromises[2]));
+            .then(returnedPromises => advanceTeams(returnedPromises[2]))
+            //set the locked property of the division 
+            //and tournament once a game has been scored
+            .then(division => { 
+              if (division.locked) return;
+              division.locked = true;
+              return division.save()
+                .then(division => {
+                  return Tournament.findById(division.tournament)
+                    .then(tournament => {
+                      if (tournament.locked) return;
+                      tournament.locked = true;
+                      return tournament.save();
+                    });
+                });
+            });
         })
         .then(() => response.sendStatus(204))
         .catch(error => errorHandler(error,response));

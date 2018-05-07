@@ -13,6 +13,7 @@ const Division = mongoose.Schema({
   'consolidation': [{type: mongoose.Schema.Types.ObjectId, ref: 'game'}],
   'semiFinal': [{type: mongoose.Schema.Types.ObjectId, ref: 'game'}],
   'final': [{type: mongoose.Schema.Types.ObjectId, ref: 'game'}],
+  'locked': {type: Boolean, default: false},
 }, {timestamps: true});
 
 
