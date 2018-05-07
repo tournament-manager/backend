@@ -40,8 +40,8 @@ module.exports = function(game){
       },
     })
     .then(division => {
-     // console.log('division', division);
-      if (!division[divisionRound].every(game => game.complete)) return;
+      // console.log('division', division);
+      if (!division[divisionRound].every(game => game.complete)) return division;
       // group play promotion
       //groupA winner 1 plays game 25
       //groupA winner 2 plays game 27
@@ -76,7 +76,8 @@ module.exports = function(game){
               .update({[teamSlot]: team._id, [`${teamSlot}RollingTotal`]: team.pointsTotal});
           })
         )
-          .then(returnArray => returnArray.map(item => console.log('returnArray', item)));
+          //.then(returnArray => returnArray.map(item => console.log('returnArray', item)))
+          .then(() => division);
       }
 
       //consolidation
